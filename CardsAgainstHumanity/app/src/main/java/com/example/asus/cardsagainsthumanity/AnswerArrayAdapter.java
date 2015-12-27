@@ -48,9 +48,9 @@ public class AnswerArrayAdapter extends ArrayAdapter<String> {
             clickedItens.remove(clickedItens.indexOf(position));
         else{
             if(clickedItens.size()>1)
-                clickedItens.clear();
-            else
-                clickedItens.add(position);
+                clickedItens.remove(1);
+
+            clickedItens.add(position);
         }
 
         notifyDataSetChanged();

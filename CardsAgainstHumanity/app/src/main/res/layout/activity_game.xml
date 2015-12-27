@@ -9,7 +9,7 @@
         android:layout_gravity="fill"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:background="#b4000000"
+        android:background="@color/colorDarkGray"
         android:weightSum="1.0"
         android:orientation="vertical">
 
@@ -17,7 +17,7 @@
             android:id="@+id/viewA"
             android:layout_height="0dp"
             android:layout_weight="0.4"
-            android:background="#000000"
+            android:background="@color/colorBlack"
             android:orientation="vertical">
 
             <LinearLayout
@@ -28,21 +28,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/colorGreen"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:typeface="monospace"
                     android:text="Player2 - 2 pts"
-                    android:id="@+id/show_popup"/>
+                    android:id="@+id/show_dialog_box"/>
 
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/colorWhite"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:typeface="monospace"
-                    android:text="00:30"
+                    android:text="Player 00:30"
                     android:gravity="right"/>
             </LinearLayout>
 
@@ -58,7 +58,7 @@
                 <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/colorWhite"
                     android:textSize="25sp"
                     android:typeface="monospace"
                     android:text="@string/large_string"/>
@@ -86,8 +86,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:clickable="true"
-        app:backgroundTint="@color/colorPrimary"
-        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/colorDarkGray"
+        android:src="@drawable/check"
         app:layout_anchor="@id/viewA"
         app:layout_anchorGravity="bottom|right|end"/>
 
