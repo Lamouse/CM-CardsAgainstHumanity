@@ -3,17 +3,21 @@ package com.example.asus.cardsagainsthumanity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class ScoreTable extends DialogFragment {
 
-    public static ScoreTable newInstance(HashMap<String, Integer> hashMap)	{
+    public static ScoreTable newInstance(ArrayList<String> playerNames, ArrayList<Integer> playerPoints)	{
         ScoreTable scoreTable = new ScoreTable();
         Bundle args = new Bundle();
-        args.putSerializable("playerScores", hashMap);
+        args.putSerializable("playerNames", playerNames);
+        args.putSerializable("playerPoints", playerPoints);
         scoreTable.setArguments(args);
 
         return scoreTable;
@@ -22,19 +26,30 @@ public class ScoreTable extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Fire missles?")
-                .setPositiveButton("fire", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // FIRE ZE MISSILES!
-                    }
-                })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                    }
-                });
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.fragment_score_table, null);
+
+        builder.setView(view);
+
+        final ListView listView = (ListView) view.findViewById(R.id.scoreTableList);
+        ArrayList<String> playerNames = (ArrayList<String>) getArguments().getSerializable("playerNames");
+        ArrayList<Integer> playerPoints = (ArrayList<Integer>) getArguments().getSerializable("playerPoints");
+        final ScoreTableArrayAdapter adapter = new ScoreTableArrayAdapter(getActivity(), playerNames, playerPoints);
+        listView.setAdapter(adapter);
+
+        final Dialog dialog = builder.create();
+        Button btn = (Button) view.findViewById(R.id.okay);
+        btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (dialog != null) {
+                    dialog.cancel();
+                }
+            }
+        });
+
         // Create the AlertDialog object and return it
-        return builder.create();
+        return dialog;
     }
 }
