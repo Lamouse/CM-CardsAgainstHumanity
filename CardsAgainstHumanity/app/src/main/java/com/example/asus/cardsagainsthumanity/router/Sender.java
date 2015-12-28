@@ -1,9 +1,9 @@
-package com.ecse414.android.echo.router;
+package com.example.asus.cardsagainsthumanity.router;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.ecse414.android.echo.config.Configuration;
-import com.ecse414.android.echo.router.tcp.TcpSender;
+import com.example.asus.cardsagainsthumanity.config.Configuration;
+import com.example.asus.cardsagainsthumanity.router.tcp.TcpSender;
 
 /**
  * Responsible for sending all packets that appear in the queue

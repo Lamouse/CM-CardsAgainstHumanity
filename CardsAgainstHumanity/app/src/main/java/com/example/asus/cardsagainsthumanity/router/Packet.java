@@ -1,4 +1,4 @@
-package com.ecse414.android.echo.router;
+package com.example.asus.cardsagainsthumanity.router;
 
 /**
  * The echo packet structure

@@ -1,4 +1,4 @@
-package com.ecse414.android.echo.router.tcp;
+package com.example.asus.cardsagainsthumanity.router.tcp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.ecse414.android.echo.router.Packet;
+import com.example.asus.cardsagainsthumanity.router.Packet;
 
 /**
  * Receives packets on a server socket threads and enqueues them to a receiver runner

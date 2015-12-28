@@ -1,4 +1,4 @@
-package com.ecse414.android.echo.router;
+package com.example.asus.cardsagainsthumanity.router;
 
 /**
  * This is an alternative representation the Android P2P library's WiFiP2PDevice class

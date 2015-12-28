@@ -1,13 +1,13 @@
-package com.ecse414.android.echo.router.tcp;
+package com.example.asus.cardsagainsthumanity.router.tcp;
 
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-import com.ecse414.android.echo.router.MeshNetworkManager;
-import com.ecse414.android.echo.router.Packet;
-import com.ecse414.android.echo.router.Receiver;
+import com.example.asus.cardsagainsthumanity.router.MeshNetworkManager;
+import com.example.asus.cardsagainsthumanity.router.Packet;
+import com.example.asus.cardsagainsthumanity.router.Receiver;
 
 /**
  * Runner for dequeueing packets from packets to send, and issues the TCP connection to send them

@@ -1,8 +1,8 @@
-package com.ecse414.android.echo.router;
+package com.example.asus.cardsagainsthumanity.router;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.ecse414.android.echo.config.Configuration;
+import com.example.asus.cardsagainsthumanity.config.Configuration;
 
 /**
  * A manager for keeping track of a mesh and handling routing
