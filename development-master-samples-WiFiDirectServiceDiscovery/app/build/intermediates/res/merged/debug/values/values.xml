@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/jbsimoes/Downloads/MyWifiMesh-master/development-master-samples-WiFiDirectServiceDiscovery/app/src/main/res/values/strings.xml -->
+    <!-- From: file:/D:/itspm/Documents/GitHub/CM-CardsAgainstHumanity/development-master-samples-WiFiDirectServiceDiscovery/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="app_name">Wi-Fi Discovery</string>
     <string name="btn_send">Send</string>
     <string name="finding_service">Finding local services</string>
     <string name="txt_hint">Type Message</string>
-    <!-- From: file:/Users/jbsimoes/Downloads/MyWifiMesh-master/development-master-samples-WiFiDirectServiceDiscovery/app/src/main/res/values/style.xml -->
+    <!-- From: file:/D:/itspm/Documents/GitHub/CM-CardsAgainstHumanity/development-master-samples-WiFiDirectServiceDiscovery/app/src/main/res/values/style.xml -->
     <eat-comment/>
     <style name="boldText">
         <item name="android:textStyle">bold|italic</item>
