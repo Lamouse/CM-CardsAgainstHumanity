@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
+
 
 public class MainActivity extends AppCompatActivity implements ManagerInterface {
 
@@ -55,24 +57,18 @@ public class MainActivity extends AppCompatActivity implements ManagerInterface 
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
 
-        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener()
-        {
+        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
             @Override
-            public void onGroupInfoAvailable(WifiP2pGroup group)
-            {
-                if (group != null)
-                {
-                    manager.removeGroup(channel, new WifiP2pManager.ActionListener()
-                    {
+            public void onGroupInfoAvailable(WifiP2pGroup group) {
+                if (group != null) {
+                    manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
                         @Override
-                        public void onSuccess()
-                        {
+                        public void onSuccess() {
                             System.out.println("Success");
                         }
 
                         @Override
-                        public void onFailure(int reason)
-                        {
+                        public void onFailure(int reason) {
                             System.out.println("Failure " + reason);
                         }
                     });
@@ -104,18 +100,51 @@ public class MainActivity extends AppCompatActivity implements ManagerInterface 
 
     public void createGame(View view)
     {
-        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-
+        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
             @Override
-            public void onSuccess() {
-                Log.d("Create Game: ", "P2P Group created");
+            public void onGroupInfoAvailable(WifiP2pGroup group) {
+            if (group != null) {
+                manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        System.out.println("Success");
+
+                        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+                            @Override
+                            public void onSuccess() {
+                                Log.wtf("Create Game: ", "P2P Group created");
+                            }
+
+                            @Override
+                            public void onFailure(int reason) {
+                                Log.wtf("Create Game: ", "P2P Group failed");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(int reason) {
+                        System.out.println("Failure " + reason);
+                    }
+                });
             }
+            else {
+                manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        Log.wtf("Create Game: ", "P2P Group created");
+                    }
 
-            @Override
-            public void onFailure(int reason) {
-                Log.d("Create Game: ", "P2P Group failed");
+                    @Override
+                    public void onFailure(int reason) {
+                        Log.wtf("Create Game: ", "P2P Group failed");
+                    }
+                });
+
+            }
             }
         });
+
 
         Intent intent = new Intent(this, RoomActivity.class);
         startActivity(intent);
@@ -125,5 +154,46 @@ public class MainActivity extends AppCompatActivity implements ManagerInterface 
     {
         Intent intent = new Intent(this, LobbyActivity.class);
         startActivity(intent);
+    }
+
+    /** register the BroadcastReceiver with the intent values to be matched */
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (manager != null && channel != null) {
+            receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
+            registerReceiver(receiver, intentFilter);
+        }
+        this.isVisible = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (receiver != null)
+            unregisterReceiver(receiver);
+
+        if (manager != null && channel != null) {
+            manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
+                @Override
+                public void onGroupInfoAvailable(WifiP2pGroup group) {
+                if (group != null) {
+                    manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            System.out.println("Success");
+                        }
+
+                        @Override
+                        public void onFailure(int reason) {
+                            System.out.println("Failure " + reason);
+                        }
+                    });
+                }
+                }
+            });
+        }
     }
 }

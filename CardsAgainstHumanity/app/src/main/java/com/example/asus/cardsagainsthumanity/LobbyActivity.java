@@ -83,7 +83,8 @@ public class LobbyActivity extends AppCompatActivity implements ManagerInterface
             }
         });
 
-        if (!isWifiP2pEnabled) {
+        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        if (!wifi.isWifiEnabled()){
             Toast.makeText(LobbyActivity.this, "Enable P2P", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
         }
@@ -125,7 +126,8 @@ public class LobbyActivity extends AppCompatActivity implements ManagerInterface
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.atn_direct_discover) {
-            if (!isWifiP2pEnabled) {
+            WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+            if (!wifi.isWifiEnabled()){
                 Toast.makeText(LobbyActivity.this, "Enable P2P", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 return true;
