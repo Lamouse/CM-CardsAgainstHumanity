@@ -1,5 +1,6 @@
 package com.example.asus.cardsagainsthumanity.wifi;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +10,9 @@ import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
+import com.example.asus.cardsagainsthumanity.LobbyActivity;
 import com.example.asus.cardsagainsthumanity.MainActivity;
+import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 
 /**
@@ -19,9 +22,9 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
 {
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
-    private MainActivity activity;
+    private Activity activity;
 
-    public WifiDirectBroadcastReceiver(WifiP2pManager pManager, WifiP2pManager.Channel pChannel, MainActivity pActivity) {
+    public WifiDirectBroadcastReceiver(WifiP2pManager pManager, WifiP2pManager.Channel pChannel, Activity pActivity) {
         super();
         manager = pManager;
         channel = pChannel;
@@ -40,7 +43,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
 
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                 // Wifi Direct mode is enabled
-                //activity.setIsWifiP2pEnabled(true);
+                ((ManagerInterface) activity).setIsWifiP2pEnabled(true);
 
                 /*manager.createGroup(channel, new WifiP2pManager.ActionListener() {
 
@@ -55,7 +58,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
                     }
                 });*/
             } else {
-                //activity.setIsWifiP2pEnabled(false);
+                ((ManagerInterface) activity).setIsWifiP2pEnabled(false);
                 //activity.resetData();
 
             }
@@ -64,9 +67,9 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
             // request available peers from the wifi p2p manager. This is an
             // asynchronous call and the calling activity is notified with a
             // callback on PeerListListener.onPeersAvailable()
-            if (manager != null) {
-                //manager.requestPeers(channel,
-                //        (WifiP2pManager.PeerListListener) activity.getFragmentManager().findFragmentById(R.id.frag_list));
+            if (manager != null && "LobbyActivity".equals(((ManagerInterface) activity).getActivityName())) {
+                manager.requestPeers(channel,
+                        (WifiP2pManager.PeerListListener) activity.getFragmentManager().findFragmentById(R.id.frag_list));
             }
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 

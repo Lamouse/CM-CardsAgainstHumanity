@@ -16,17 +16,30 @@ import android.view.MenuItem;
 import android.view.View;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ManagerInterface {
 
     private WifiP2pManager manager;
-    private final IntentFilter intentFilter = new IntentFilter();
+    private boolean isWifiP2pEnabled = false;
+    private boolean retryChannel = false;
 
+    private final IntentFilter intentFilter = new IntentFilter();
+    private final IntentFilter wifiIntentFilter = new IntentFilter();
     private WifiP2pManager.Channel channel;
     private BroadcastReceiver receiver = null;
 
-    private WifiManager wifiManager;
-    private IntentFilter wifiIntentFilter = new IntentFilter();
-    private BroadcastReceiver wifiReceiver;
+    WifiManager wifiManager;
+    private boolean isWifiConnected;
+    public boolean isVisible = true;
+
+    @Override
+    public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
+        this.isWifiP2pEnabled = isWifiP2pEnabled;
+    }
+
+    @Override
+    public String getActivityName() {
+        return "MainActivity";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void joinGame(View view)
     {
-
+        Intent intent = new Intent(this, LobbyActivity.class);
+        startActivity(intent);
     }
 }
