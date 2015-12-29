@@ -174,6 +174,9 @@ public class DeviceListFragment extends ListFragment implements WifiP2pManager.P
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+
+        clearPeers();
+
         progressDialog = ProgressDialog.show(getActivity(), "Press back to cancel", "finding peers", true, true,
                 new DialogInterface.OnCancelListener() {
 

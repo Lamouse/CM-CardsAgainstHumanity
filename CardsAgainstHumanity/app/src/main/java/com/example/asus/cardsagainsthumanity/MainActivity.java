@@ -57,24 +57,7 @@ public class MainActivity extends AppCompatActivity implements ManagerInterface 
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
 
-        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-            @Override
-            public void onGroupInfoAvailable(WifiP2pGroup group) {
-                if (group != null) {
-                    manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
-                        @Override
-                        public void onSuccess() {
-                            System.out.println("Success");
-                        }
-
-                        @Override
-                        public void onFailure(int reason) {
-                            System.out.println("Failure " + reason);
-                        }
-                    });
-                }
-            }
-        });
+        removeGroup();
     }
 
     @Override
@@ -156,6 +139,27 @@ public class MainActivity extends AppCompatActivity implements ManagerInterface 
         startActivity(intent);
     }
 
+    private void removeGroup() {
+        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
+            @Override
+            public void onGroupInfoAvailable(WifiP2pGroup group) {
+            if (group != null) {
+                manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        System.out.println("Success");
+                    }
+
+                    @Override
+                    public void onFailure(int reason) {
+                        System.out.println("Failure " + reason);
+                    }
+                });
+            }
+            }
+        });
+    }
+
     /** register the BroadcastReceiver with the intent values to be matched */
     @Override
     public void onResume() {
@@ -164,6 +168,8 @@ public class MainActivity extends AppCompatActivity implements ManagerInterface 
         if (manager != null && channel != null) {
             receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
             registerReceiver(receiver, intentFilter);
+
+            removeGroup();
         }
         this.isVisible = true;
     }
@@ -176,24 +182,7 @@ public class MainActivity extends AppCompatActivity implements ManagerInterface 
             unregisterReceiver(receiver);
 
         if (manager != null && channel != null) {
-            manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-                @Override
-                public void onGroupInfoAvailable(WifiP2pGroup group) {
-                if (group != null) {
-                    manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
-                        @Override
-                        public void onSuccess() {
-                            System.out.println("Success");
-                        }
-
-                        @Override
-                        public void onFailure(int reason) {
-                            System.out.println("Failure " + reason);
-                        }
-                    });
-                }
-                }
-            });
+            removeGroup();
         }
     }
 }
