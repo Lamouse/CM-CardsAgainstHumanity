@@ -149,7 +149,10 @@ public class DeviceListFragment extends ListFragment implements WifiP2pManager.P
             progressDialog.dismiss();
         }
         peers.clear();
-        peers.addAll(peerList.getDeviceList());
+        for(WifiP2pDevice wifiP2pDevice : peerList.getDeviceList()) {
+            if(wifiP2pDevice.isGroupOwner())
+                peers.add(wifiP2pDevice);
+        }
         ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
         if (peers.size() == 0) {
             return;
