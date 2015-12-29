@@ -9,11 +9,13 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
@@ -83,15 +85,40 @@ public class MainActivity extends AppCompatActivity implements ManagerInterface 
 
     public void createGame(View view)
     {
-        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-            @Override
-            public void onGroupInfoAvailable(WifiP2pGroup group) {
-            if (group != null) {
-                manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
-                    @Override
-                    public void onSuccess() {
-                        System.out.println("Success");
+        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        if (!wifi.isWifiEnabled()){
+            Toast.makeText(MainActivity.this, "Enable P2P", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+        }
+        else {
+            manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
+                @Override
+                public void onGroupInfoAvailable(WifiP2pGroup group) {
+                    if (group != null) {
+                        manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+                            @Override
+                            public void onSuccess() {
+                                System.out.println("Success");
 
+                                manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Log.wtf("Create Game: ", "P2P Group created");
+                                    }
+
+                                    @Override
+                                    public void onFailure(int reason) {
+                                        Log.wtf("Create Game: ", "P2P Group failed");
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(int reason) {
+                                System.out.println("Failure " + reason);
+                            }
+                        });
+                    } else {
                         manager.createGroup(channel, new WifiP2pManager.ActionListener() {
                             @Override
                             public void onSuccess() {
@@ -103,34 +130,15 @@ public class MainActivity extends AppCompatActivity implements ManagerInterface 
                                 Log.wtf("Create Game: ", "P2P Group failed");
                             }
                         });
+
                     }
-
-                    @Override
-                    public void onFailure(int reason) {
-                        System.out.println("Failure " + reason);
-                    }
-                });
-            }
-            else {
-                manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-                    @Override
-                    public void onSuccess() {
-                        Log.wtf("Create Game: ", "P2P Group created");
-                    }
-
-                    @Override
-                    public void onFailure(int reason) {
-                        Log.wtf("Create Game: ", "P2P Group failed");
-                    }
-                });
-
-            }
-            }
-        });
+                }
+            });
 
 
-        Intent intent = new Intent(this, RoomActivity.class);
-        startActivity(intent);
+            Intent intent = new Intent(this, RoomActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void joinGame(View view)

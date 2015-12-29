@@ -9,6 +9,7 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -142,9 +143,6 @@ public class DeviceListFragment extends ListFragment implements WifiP2pManager.P
      */
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peerList) {
-        Toast.makeText(getActivity(), "onPeersAvailable", Toast.LENGTH_SHORT).show();
-        Log.wtf("onPeersAvailable", "oi");
-
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
@@ -185,6 +183,18 @@ public class DeviceListFragment extends ListFragment implements WifiP2pManager.P
 
                     }
                 });
+
+        final Handler handler  = new Handler();
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+            }
+        };
+
+        handler.postDelayed(runnable, 1500);
     }
 
     /**
