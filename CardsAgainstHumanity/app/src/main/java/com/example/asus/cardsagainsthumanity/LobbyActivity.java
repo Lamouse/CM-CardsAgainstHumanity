@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.provider.Settings;
@@ -139,6 +140,22 @@ public class LobbyActivity extends AppCompatActivity implements ManagerInterface
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void connect(WifiP2pConfig config) {
+        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Toast.makeText(LobbyActivity.this, "Connect failed. Retry.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /** register the BroadcastReceiver with the intent values to be matched */

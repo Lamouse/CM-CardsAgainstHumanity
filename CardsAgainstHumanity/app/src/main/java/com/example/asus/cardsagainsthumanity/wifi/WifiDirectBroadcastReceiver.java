@@ -15,15 +15,20 @@ import com.example.asus.cardsagainsthumanity.LobbyActivity;
 import com.example.asus.cardsagainsthumanity.MainActivity;
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
+import com.example.asus.cardsagainsthumanity.RoomActivity;
+import com.example.asus.cardsagainsthumanity.config.Configuration;
+import com.example.asus.cardsagainsthumanity.router.AllEncompasingP2PClient;
+import com.example.asus.cardsagainsthumanity.router.MeshNetworkManager;
+import com.example.asus.cardsagainsthumanity.router.Receiver;
+import com.example.asus.cardsagainsthumanity.router.Sender;
 
-/**
- * Created by jbsimoes on 28/12/15.
- */
 public class WifiDirectBroadcastReceiver extends BroadcastReceiver
 {
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
     private Activity activity;
+
+    public static String MAC;
 
     public WifiDirectBroadcastReceiver(WifiP2pManager pManager, WifiP2pManager.Channel pChannel, Activity pActivity) {
         super();
@@ -38,26 +43,12 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
         String action = intent.getAction();
 
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-
             // UI update to indicate wifi p2p status.
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
 
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                 // Wifi Direct mode is enabled
                 ((ManagerInterface) activity).setIsWifiP2pEnabled(true);
-
-                /*manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-
-                    @Override
-                    public void onSuccess() {
-                        Log.d(WiFiDirectActivity.TAG, "P2P Group created");
-                    }
-
-                    @Override
-                    public void onFailure(int reason) {
-                        Log.d(WiFiDirectActivity.TAG, "P2P Group failed");
-                    }
-                });*/
             } else {
                 ((ManagerInterface) activity).setIsWifiP2pEnabled(false);
                 //activity.resetData();
@@ -67,32 +58,33 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
             // request available peers from the wifi p2p manager. This is an
             // asynchronous call and the calling activity is notified with a
             // callback on PeerListListener.onPeersAvailable()
-            if (manager != null && "LobbyActivity".equals(((ManagerInterface) activity).getActivityName())) {
-                manager.requestPeers(channel,
-                        (WifiP2pManager.PeerListListener) activity.getFragmentManager().findFragmentById(R.id.frag_list));
+            if (manager != null) {
+                if ("LobbyActivity".equals(((ManagerInterface) activity).getActivityName())) {
+                    manager.requestPeers(channel, (WifiP2pManager.PeerListListener) activity.getFragmentManager().findFragmentById(R.id.frag_list));
+                } else if ("RoomActvity".equals(((ManagerInterface) activity).getActivityName())) {
+                    // TODO
+                }
             }
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
-
             if (manager == null) {
                 return;
             }
 
-            NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+            if ("LobbyActivity".equals(((ManagerInterface) activity).getActivityName())) {
+                NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+                if (networkInfo.isConnected()) {
+                    Toast.makeText(activity, "CONNECTED", Toast.LENGTH_SHORT).show();
 
-            if (networkInfo.isConnected()) {
-                // we are connected with the other device, request connection
-                // info to find group owner IP
-                /*DeviceDetailFragment fragment = (DeviceDetailFragment) activity.getFragmentManager().findFragmentById(
-                        R.id.frag_detail);
-                manager.requestConnectionInfo(channel, fragment);*/
-            } else {
-                // It's a disconnect
-                //activity.resetData();
+                    intent = new Intent(activity, RoomActivity.class);
+                    intent.putExtra("Type", "Player");
+                    activity.startActivity(intent);
+                } else {
+                    Toast.makeText(activity, "DISCONNECTED", Toast.LENGTH_SHORT).show();
+                }
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-            /*DeviceListFragment fragment = (DeviceListFragment) activity.getFragmentManager().findFragmentById(
-                    R.id.frag_list);
-            fragment.updateThisDevice((WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE));
+
+            /*Toast.makeText(activity, "WIFI_P2P_THIS_DEVICE_CHANGED_ACTION", Toast.LENGTH_SHORT).show();;
 
             MAC = ((WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceAddress;
 
@@ -118,9 +110,8 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
                         String ssid = group.getNetworkName();
                         String passphrase = group.getPassphrase();
 
-                        Log.d(WiFiDirectActivity.TAG, "GROUP INFO AVALABLE");
-                        Log.d(WiFiDirectActivity.TAG, " SSID : " + ssid + "\n Passphrase : " + passphrase);
-
+                        Log.d("onGroupInfoAvailable", "GROUP INFO AVALABLE");
+                        Log.d("onGroupInfoAvailable", " SSID : " + ssid + "\n Passphrase : " + passphrase);
                     }
                 }
             });*/
