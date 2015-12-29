@@ -83,7 +83,12 @@ public class LobbyActivity extends AppCompatActivity implements ManagerInterface
             }
         });
 
-        searchPeers();
+        if (!isWifiP2pEnabled) {
+            Toast.makeText(LobbyActivity.this, "Enable P2P", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+        }
+        else
+            searchPeers();
     }
 
     @Override
