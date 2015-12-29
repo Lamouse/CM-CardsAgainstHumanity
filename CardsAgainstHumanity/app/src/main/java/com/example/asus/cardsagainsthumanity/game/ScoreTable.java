@@ -1,4 +1,4 @@
-package com.example.asus.cardsagainsthumanity;
+package com.example.asus.cardsagainsthumanity.game;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+
+import com.example.asus.cardsagainsthumanity.R;
+import com.example.asus.cardsagainsthumanity.game.utils.ScoreTableArrayAdapter;
 
 import java.util.ArrayList;
 

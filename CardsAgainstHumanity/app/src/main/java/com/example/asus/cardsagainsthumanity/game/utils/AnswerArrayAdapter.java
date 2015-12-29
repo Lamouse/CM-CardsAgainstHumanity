@@ -1,4 +1,4 @@
-package com.example.asus.cardsagainsthumanity;
+package com.example.asus.cardsagainsthumanity.game.utils;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.example.asus.cardsagainsthumanity.R;
 
 import java.util.ArrayList;
 

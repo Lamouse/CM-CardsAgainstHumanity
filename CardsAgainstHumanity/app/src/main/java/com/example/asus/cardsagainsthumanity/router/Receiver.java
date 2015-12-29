@@ -2,12 +2,13 @@ package com.example.asus.cardsagainsthumanity.router;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.ecse414.android.echo.MessageActivity;
-import com.ecse414.android.echo.WiFiDirectActivity;
+// import com.ecse414.android.echo.MessageActivity;
+// import com.ecse414.android.echo.WiFiDirectActivity;
 import com.example.asus.cardsagainsthumanity.config.Configuration;
 import com.example.asus.cardsagainsthumanity.router.tcp.TcpReciever;
-import com.ecse414.android.echo.ui.DeviceDetailFragment;
+// import com.ecse414.android.echo.ui.DeviceDetailFragment;
 
+import android.app.Activity;
 import android.widget.Toast;
 
 /**
@@ -25,13 +26,13 @@ public class Receiver implements Runnable {
 	/**
 	 * A ref to the activity
 	 */
-	static WiFiDirectActivity activity;
+	static Activity activity;
 
 	/**
 	 * Constructor with activity
 	 * @param a
 	 */
-	public Receiver(WiFiDirectActivity a) {
+	public Receiver(Activity a) {
 		Receiver.activity = a;
 		running = true;
 	}
@@ -76,7 +77,7 @@ public class Receiver implements Runnable {
 			/*
 			 * If it's a hello, this is special and need to go through the connection mechanism for any node receiving this
 			 */
-			if (p.getType().equals(Packet.TYPE.HELLO)) {
+			/*if (p.getType().equals(Packet.TYPE.HELLO)) {
 				// Put it in your routing table
 				for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values()) {
 					if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()) || c.getMac().equals(p.getSenderMac()))
@@ -141,7 +142,7 @@ public class Receiver implements Runnable {
 							 * Update your routing table if for some reason this
 							 * guy isn't in it
 							 */
-							MeshNetworkManager.routingTable.put(p.getSenderMac(),
+			/*				MeshNetworkManager.routingTable.put(p.getSenderMac(),
 									new AllEncompasingP2PClient(p.getSenderMac(), p.getSenderIP(), p.getSenderMac(),
 											MeshNetworkManager.getSelf().getGroupOwnerMac()));
 						}
@@ -169,7 +170,7 @@ public class Receiver implements Runnable {
 						p.setTtl(ttl);
 					}
 				}
-			}
+			}*/
 
 		}
 	}
@@ -184,7 +185,7 @@ public class Receiver implements Runnable {
 		final String msg;
 		message = msg = smac + " has joined.";
 		final String name = smac;
-		activity.runOnUiThread(new Runnable() {
+		/*activity.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -194,7 +195,7 @@ public class Receiver implements Runnable {
 					MessageActivity.addMessage(name, msg);
 				}
 			}
-		});
+		});*/
 	}
 
 	/**
@@ -207,7 +208,7 @@ public class Receiver implements Runnable {
 		final String msg;
 		message = msg = smac + " has left.";
 		final String name = smac;
-		activity.runOnUiThread(new Runnable() {
+		/*activity.runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -217,7 +218,7 @@ public class Receiver implements Runnable {
 					MessageActivity.addMessage(name, msg);
 				}
 			}
-		});
+		});*/
 	}
 
 	/**
@@ -226,13 +227,14 @@ public class Receiver implements Runnable {
 	public static void updatePeerList() {
 		if (activity == null)
 			return;
-		activity.runOnUiThread(new Runnable() {
+		/*activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				DeviceDetailFragment.updateGroupChatMembersMessage();
 			}
 
 		});
+		*/
 	}
 
 }

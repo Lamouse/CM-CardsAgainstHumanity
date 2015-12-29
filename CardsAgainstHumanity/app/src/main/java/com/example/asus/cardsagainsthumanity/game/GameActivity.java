@@ -1,4 +1,4 @@
-package com.example.asus.cardsagainsthumanity;
+package com.example.asus.cardsagainsthumanity.game;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.example.asus.cardsagainsthumanity.R;
+import com.example.asus.cardsagainsthumanity.game.utils.AnswerArrayAdapter;
 
 import java.util.ArrayList;
 
