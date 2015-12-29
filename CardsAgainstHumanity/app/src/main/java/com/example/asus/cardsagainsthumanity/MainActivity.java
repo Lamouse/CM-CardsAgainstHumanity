@@ -5,14 +5,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.asus.cardsagainsthumanity.config.Configuration;
 
@@ -20,12 +24,14 @@ import com.example.asus.cardsagainsthumanity.config.Configuration;
 public class MainActivity extends AppCompatActivity {
 
     private WifiP2pManager manager;
-
     private final IntentFilter intentFilter = new IntentFilter();
+
     private WifiP2pManager.Channel channel;
     private BroadcastReceiver receiver = null;
 
     private WifiManager wifiManager;
+    private IntentFilter wifiIntentFilter = new IntentFilter();
+    private BroadcastReceiver wifiReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,17 +47,30 @@ public class MainActivity extends AppCompatActivity {
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
 
-        if (Configuration.isDeviceBridgingEnabled)
+        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener()
         {
-            wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-
-            if (!wifiManager.isWifiEnabled())
+            @Override
+            public void onGroupInfoAvailable(WifiP2pGroup group)
             {
-                wifiManager.setWifiEnabled(true);
+                if (group != null)
+                {
+                    manager.removeGroup(channel, new WifiP2pManager.ActionListener()
+                    {
+                        @Override
+                        public void onSuccess()
+                        {
+                            System.out.println("Success");
+                        }
+
+                        @Override
+                        public void onFailure(int reason)
+                        {
+                            System.out.println("Failure " + reason);
+                        }
+                    });
+                }
             }
-
-
-        }
+        });
     }
 
     @Override
@@ -75,8 +94,27 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void beginGame(View view) {
-        Intent intent = new Intent(this, GameActivity.class);
+    public void createGame(View view)
+    {
+        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+
+            @Override
+            public void onSuccess() {
+                Log.d("Create Game: ", "P2P Group created");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.d("Create Game: ", "P2P Group failed");
+            }
+        });
+
+        Intent intent = new Intent(this, RoomActivity.class);
         startActivity(intent);
+    }
+
+    public void joinGame(View view)
+    {
+
     }
 }

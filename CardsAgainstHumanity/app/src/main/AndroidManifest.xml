@@ -31,6 +31,14 @@
             android:label="@string/title_activity_game"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".RoomActivity"
+            android:label="@string/title_activity_room" >
+        </activity>
+        <activity
+            android:name=".LobbyActivity"
+            android:label="@string/title_activity_lobby" >
+        </activity>
     </application>
 
 </manifest>
