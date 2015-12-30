@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.asus.cardsagainsthumanity.R;
+import com.example.asus.cardsagainsthumanity.router.Packet;
+import com.example.asus.cardsagainsthumanity.router.Sender;
 import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
 public class RoomActivity extends AppCompatActivity implements ManagerInterface
@@ -52,6 +54,18 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
+        String userType;
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                userType = null;
+            } else {
+                userType = extras.getString("Type");
+            }
+        } else {
+            userType = (String) savedInstanceState.getSerializable("Type");
+        }
+
         // Set peer2peer actions
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
@@ -63,7 +77,16 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
 
         removeGroup();
 
-        createGameRoom();
+        if (userType.equals("Owner"))
+        {
+            Log.wtf("Is owner:", "Creating room");
+            createGameRoom();
+        }
+        else if (userType.equals("Player"))
+        {
+            Log.wtf("Is player: ", "Sending Hello");
+            Sender.queuePacket(new Packet(Packet.TYPE.HELLO, new byte[0], null, WifiDirectBroadcastReceiver.MAC));
+        }
     }
 
     @Override
@@ -198,6 +221,12 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                 }
             });
         }
+    }
+
+    public void updatePeersList()
+    {
+        RoomPeersList fragment = (RoomPeersList) getSupportFragmentManager().findFragmentById(R.id.room_peers_list);
+        fragment.updateRoomPeers();
     }
 
     private void removeGroup() {
