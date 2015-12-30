@@ -22,6 +22,8 @@ import com.example.asus.cardsagainsthumanity.router.Packet;
 import com.example.asus.cardsagainsthumanity.router.Sender;
 import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
+import java.util.ArrayList;
+
 public class RoomActivity extends AppCompatActivity implements ManagerInterface
 {
     private WifiP2pManager manager;
@@ -43,6 +45,20 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
+        String userType;
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                userType = null;
+            } else {
+                userType = extras.getString("Type");
+            }
+        } else {
+            userType = (String) savedInstanceState.getSerializable("Type");
+        }
+
+        Log.wtf("userType" , userType);
+
         // Set peer2peer actions
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
@@ -54,8 +70,6 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
 
         removeGroup();
 
-        Bundle p = getIntent().getExtras();
-        String userType = p.getString("Type", null);
         if (userType.equals("Owner")) // If owner, create a group
         {
             createGameRoom();
@@ -131,18 +145,15 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
 
     @Override
     public void connect(WifiP2pConfig config) {
-        manager.connect(channel, config, new WifiP2pManager.ActionListener()
-        {
+        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
 
             @Override
-            public void onSuccess()
-            {
+            public void onSuccess() {
                 // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
             }
 
             @Override
-            public void onFailure(int reason)
-            {
+            public void onFailure(int reason) {
                 Toast.makeText(RoomActivity.this, "Connect failed. Retry.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -182,25 +193,18 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
         }
         else {
-            manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener()
-            {
+            manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                 @Override
-                public void onGroupInfoAvailable(WifiP2pGroup group)
-                {
-                    if (group != null)
-                    {
-                        manager.removeGroup(channel, new WifiP2pManager.ActionListener()
-                        {
+                public void onGroupInfoAvailable(WifiP2pGroup group) {
+                    if (group != null) {
+                        manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
                             @Override
-                            public void onSuccess()
-                            {
+                            public void onSuccess() {
                                 System.out.println("Success");
 
-                                manager.createGroup(channel, new WifiP2pManager.ActionListener()
-                                {
+                                manager.createGroup(channel, new WifiP2pManager.ActionListener() {
                                     @Override
-                                    public void onSuccess()
-                                    {
+                                    public void onSuccess() {
                                         Log.wtf("Create Game: ", "P2P Group created");
 
                                         Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
@@ -209,26 +213,21 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                                     }
 
                                     @Override
-                                    public void onFailure(int reason)
-                                    {
+                                    public void onFailure(int reason) {
                                         Log.wtf("Create Game: ", "P2P Group failed");
                                     }
                                 });
                             }
 
                             @Override
-                            public void onFailure(int reason)
-                            {
+                            public void onFailure(int reason) {
                                 System.out.println("Failure " + reason);
                             }
                         });
-                    } else
-                    {
-                        manager.createGroup(channel, new WifiP2pManager.ActionListener()
-                        {
+                    } else {
+                        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
                             @Override
-                            public void onSuccess()
-                            {
+                            public void onSuccess() {
                                 Log.wtf("Create Game: ", "P2P Group created");
 
                                 Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
@@ -236,8 +235,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                             }
 
                             @Override
-                            public void onFailure(int reason)
-                            {
+                            public void onFailure(int reason) {
                                 Log.wtf("Create Game: ", "P2P Group failed");
                             }
                         });
@@ -246,5 +244,13 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                 }
             });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d("CDA", "onBackPressed Called");
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }
