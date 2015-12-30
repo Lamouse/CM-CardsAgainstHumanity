@@ -4,6 +4,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 // import com.ecse414.android.echo.MessageActivity;
 // import com.ecse414.android.echo.WiFiDirectActivity;
+import com.example.asus.cardsagainsthumanity.ManagerInterface;
+import com.example.asus.cardsagainsthumanity.R;
+import com.example.asus.cardsagainsthumanity.RoomPeersFragment;
 import com.example.asus.cardsagainsthumanity.config.Configuration;
 import com.example.asus.cardsagainsthumanity.router.tcp.TcpReciever;
 // import com.ecse414.android.echo.ui.DeviceDetailFragment;
@@ -73,11 +76,10 @@ public class Receiver implements Runnable {
 			 */
 			p = packetQueue.remove();
 
-
 			/*
 			 * If it's a hello, this is special and need to go through the connection mechanism for any node receiving this
 			 */
-			/*if (p.getType().equals(Packet.TYPE.HELLO)) {
+			if (p.getType().equals(Packet.TYPE.HELLO)) {
 				// Put it in your routing table
 				for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values()) {
 					if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()) || c.getMac().equals(p.getSenderMac()))
@@ -117,7 +119,7 @@ public class Receiver implements Runnable {
 
 						final String message = emb_mac + " joined the conversation";
 						final String name = p.getSenderMac();
-						activity.runOnUiThread(new Runnable() {
+						/*activity.runOnUiThread(new Runnable() {
 
 							@Override
 							public void run() {
@@ -127,7 +129,7 @@ public class Receiver implements Runnable {
 									MessageActivity.addMessage(name, message);
 								}
 							}
-						});
+						});*/
 						updatePeerList();
 
 					} else if (p.getType().equals(Packet.TYPE.MESSAGE)) {
@@ -142,12 +144,12 @@ public class Receiver implements Runnable {
 							 * Update your routing table if for some reason this
 							 * guy isn't in it
 							 */
-			/*				MeshNetworkManager.routingTable.put(p.getSenderMac(),
+							MeshNetworkManager.routingTable.put(p.getSenderMac(),
 									new AllEncompasingP2PClient(p.getSenderMac(), p.getSenderIP(), p.getSenderMac(),
 											MeshNetworkManager.getSelf().getGroupOwnerMac()));
 						}
 
-						activity.runOnUiThread(new Runnable() {
+						/*activity.runOnUiThread(new Runnable() {
 
 							@Override
 							public void run() {
@@ -157,7 +159,7 @@ public class Receiver implements Runnable {
 									MessageActivity.addMessage(name, msg);
 								}
 							}
-						});
+						});*/
 						updatePeerList();
 					}
 				} else {
@@ -170,7 +172,7 @@ public class Receiver implements Runnable {
 						p.setTtl(ttl);
 					}
 				}
-			}*/
+			}
 
 		}
 	}
@@ -224,17 +226,15 @@ public class Receiver implements Runnable {
 	/**
 	 * Update the list of peers on the front page
 	 */
-	public static void updatePeerList() {
+	public void updatePeerList() {
 		if (activity == null)
 			return;
-		/*activity.runOnUiThread(new Runnable() {
+		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				DeviceDetailFragment.updateGroupChatMembersMessage();
+                // FIXME: Fazer append
 			}
-
 		});
-		*/
 	}
 
 }

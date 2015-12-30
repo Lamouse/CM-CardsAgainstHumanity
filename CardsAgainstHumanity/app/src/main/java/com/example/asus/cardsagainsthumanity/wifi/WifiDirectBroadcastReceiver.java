@@ -28,7 +28,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
     private WifiP2pManager.Channel channel;
     private Activity activity;
 
-    public static String MAC;
+    public static String macAddress;
 
     public WifiDirectBroadcastReceiver(WifiP2pManager pManager, WifiP2pManager.Channel pChannel, Activity pActivity) {
         super();
@@ -82,39 +82,40 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
                     Toast.makeText(activity, "DISCONNECTED", Toast.LENGTH_SHORT).show();
                 }
             }
-        } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
+        } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action))
+        {
+            if ("RoomActivity".equals(((ManagerInterface) activity).getActivityName()))
+            {
+                macAddress = ((WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceAddress;
 
-            /*Toast.makeText(activity, "WIFI_P2P_THIS_DEVICE_CHANGED_ACTION", Toast.LENGTH_SHORT).show();;
+                //Set yourself on connection
+                MeshNetworkManager.setSelf(new AllEncompasingP2PClient(((WifiP2pDevice) intent
+                        .getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceAddress, Configuration.GO_IP,
+                        ((WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceName,
+                        ((WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceAddress));
 
-            MAC = ((WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceAddress;
-
-            //Set yourself on connection
-            MeshNetworkManager.setSelf(new AllEncompasingP2PClient(((WifiP2pDevice) intent
-                    .getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceAddress, Configuration.GO_IP,
-                    ((WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceName,
-                    ((WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceAddress));
-
-            //Launch receiver and sender once connected to someone
-            if (!Receiver.running) {
-                Receiver r = new Receiver(this.activity);
-                new Thread(r).start();
-                Sender s = new Sender();
-                new Thread(s).start();
-            }
-
-            manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-                @Override
-                public void onGroupInfoAvailable(WifiP2pGroup group) {
-                    if (group != null) {
-                        // clients require these
-                        String ssid = group.getNetworkName();
-                        String passphrase = group.getPassphrase();
-
-                        Log.d("onGroupInfoAvailable", "GROUP INFO AVALABLE");
-                        Log.d("onGroupInfoAvailable", " SSID : " + ssid + "\n Passphrase : " + passphrase);
-                    }
+                //Launch receiver and sender once connected to someone
+                if (!Receiver.running) {
+                    Receiver r = new Receiver(this.activity);
+                    new Thread(r).start();
+                    Sender s = new Sender();
+                    new Thread(s).start();
                 }
-            });*/
+
+                manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
+                    @Override
+                    public void onGroupInfoAvailable(WifiP2pGroup group) {
+                        if (group != null) {
+                            // clients require these
+                            String ssid = group.getNetworkName();
+                            String passphrase = group.getPassphrase();
+
+                            Log.d("onGroupInfoAvailable", "GROUP INFO AVALABLE");
+                            Log.d("onGroupInfoAvailable", " SSID : " + ssid + "\n Passphrase : " + passphrase);
+                        }
+                    }
+                });
+            }
         }
     }
 }
