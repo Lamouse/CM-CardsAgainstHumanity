@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.provider.Settings;
@@ -27,6 +29,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
     private WifiP2pManager manager;
     private boolean isWifiP2pEnabled = false;
     private boolean retryChannel = false;
+    private String userType;
 
     private final IntentFilter intentFilter = new IntentFilter();
     private final IntentFilter wifiIntentFilter = new IntentFilter();
@@ -48,13 +51,16 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         return "RoomActivity";
     }
 
+    public String getUserType() {
+        return userType;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
-        String userType;
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
@@ -75,17 +81,32 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
 
-        removeGroup();
+        // removeGroup();
 
         if (userType.equals("Owner"))
         {
             Log.wtf("Is owner:", "Creating room");
-            createGameRoom();
+            // isto depois e tratado o WiFiDirectBroadcastReceiver
         }
         else if (userType.equals("Player"))
         {
-            Log.wtf("Is player: ", "Sending Hello");
-            Sender.queuePacket(new Packet(Packet.TYPE.HELLO, new byte[0], null, WifiDirectBroadcastReceiver.MAC));
+            String deviceAddress;
+            if (savedInstanceState == null) {
+                Bundle extras = getIntent().getExtras();
+                if(extras == null) {
+                    deviceAddress = null;
+                } else {
+                    deviceAddress = extras.getString("Device");
+                }
+            } else {
+                deviceAddress = (String) savedInstanceState.getSerializable("Device");
+            }
+
+            WifiP2pConfig config = new WifiP2pConfig();
+            config.deviceAddress = deviceAddress;
+            config.wps.setup = WpsInfo.PBC;
+
+            connect(config);
         }
     }
 
@@ -97,7 +118,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
             registerReceiver(receiver, intentFilter);
 
-            removeGroup();
+            // removeGroup();
         }
         this.isVisible = true;
     }
@@ -109,9 +130,9 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         if (receiver != null)
             unregisterReceiver(receiver);
 
-        if (manager != null && channel != null) {
+        /* if (manager != null && channel != null) {
             removeGroup();
-        }
+        } */
     }
 
     @Override
@@ -146,6 +167,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             @Override
             public void onSuccess() {
                 // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
+                Toast.makeText(RoomActivity.this, "Connect Successful.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -155,76 +177,9 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         });
     }
 
-    public void createGameRoom()
-    {
-        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-        if (!wifi.isWifiEnabled()){
-            Toast.makeText(RoomActivity.this, "Enable P2P", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-        }
-        else {
-            manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-                @Override
-                public void onGroupInfoAvailable(WifiP2pGroup group) {
-                    if (group != null) {
-                        manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
-                            @Override
-                            public void onSuccess() {
-                                System.out.println("Success");
-
-                                manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-                                    @Override
-                                    public void onSuccess() {
-                                        Log.wtf("Create Game: ", "P2P Group created");
-
-                                    }
-
-                                    @Override
-                                    public void onFailure(int reason) {
-                                        Log.wtf("Create Game: ", "P2P Group failed");
-
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onFailure(int reason) {
-                                System.out.println("Failure " + reason);
-
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-                    } else {
-                        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.wtf("Create Game: ", "P2P Group created");
-
-                            }
-
-                            @Override
-                            public void onFailure(int reason) {
-                                Log.wtf("Create Game: ", "P2P Group failed");
-
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-
-                    }
-                }
-            });
-        }
-    }
-
     public void updatePeersList()
     {
+        Log.wtf("updatePeersList", "Enter");
         RoomPeersList fragment = (RoomPeersList) getSupportFragmentManager().findFragmentById(R.id.room_peers_list);
         fragment.updateRoomPeers();
     }
@@ -250,5 +205,9 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                 }
             }
         });
+    }
+
+    public void sendFirstPacket() {
+        Sender.queuePacket(new Packet(Packet.TYPE.HELLO, new byte[0], null, WifiDirectBroadcastReceiver.MAC));
     }
 }

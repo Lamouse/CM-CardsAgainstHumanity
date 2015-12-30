@@ -4,6 +4,7 @@ import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -95,11 +96,10 @@ public class DeviceListFragment extends ListFragment implements WifiP2pManager.P
     public void onListItemClick(ListView l, View v, int position, long id) {
         WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
 
-        WifiP2pConfig config = new WifiP2pConfig();
-        config.deviceAddress = device.deviceAddress;
-        config.wps.setup = WpsInfo.PBC;
-
-        ((LobbyActivity) getActivity()).connect(config);
+        Intent intent = new Intent(getActivity(), RoomActivity.class);
+        intent.putExtra("Type", "Player");
+        intent.putExtra("Device", device.deviceAddress);
+        getActivity().startActivity(intent);
     }
 
     /**

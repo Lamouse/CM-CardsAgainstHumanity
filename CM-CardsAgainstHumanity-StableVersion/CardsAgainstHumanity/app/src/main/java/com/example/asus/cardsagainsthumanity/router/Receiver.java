@@ -11,6 +11,7 @@ import com.example.asus.cardsagainsthumanity.router.tcp.TcpReciever;
 // import com.ecse414.android.echo.ui.DeviceDetailFragment;
 
 import android.app.Activity;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -48,6 +49,7 @@ public class Receiver implements Runnable {
 		 */
 		ConcurrentLinkedQueue<Packet> packetQueue = new ConcurrentLinkedQueue<Packet>();
 
+		Log.wtf("RECEIVER", "OPENED");
 		/*
 		 * Receiver thread 
 		 */
@@ -75,7 +77,7 @@ public class Receiver implements Runnable {
 			 */
 			p = packetQueue.remove();
 
-
+			Log.wtf("PACKET", "RECEIVED");
 			/*
 			 * If it's a hello, this is special and need to go through the connection mechanism for any node receiving this
 			 */
@@ -229,12 +231,13 @@ public class Receiver implements Runnable {
 	public static void updatePeerList() {
 		if (activity == null)
 			return;
-		/*activity.runOnUiThread(new Runnable() {
+
+		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-               // ((RoomActivity) activity).updatePeersList();
+				((RoomActivity) activity).updatePeersList();
 			}
-		});*/
+		});
 	}
 
 }

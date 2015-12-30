@@ -1,5 +1,8 @@
 package com.example.asus.cardsagainsthumanity.router;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.example.asus.cardsagainsthumanity.config.Configuration;
@@ -50,6 +53,7 @@ public class Sender implements Runnable {
 				}
 			}
 
+			Log.wtf("PacketToSend", "Now");
 			Packet p = ccl.remove();
 			String ip = MeshNetworkManager.getIPForClient(p.getMac());
 			packetSender.sendPacket(ip, Configuration.RECEIVE_PORT, p);

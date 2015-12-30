@@ -49,6 +49,27 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                 // Wifi Direct mode is enabled
                 ((ManagerInterface) activity).setIsWifiP2pEnabled(true);
+
+                if ("RoomActivity".equals(((ManagerInterface) activity).getActivityName()) && "Owner".equals(((RoomActivity) activity).getUserType()))
+                {
+                    manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+
+                        @Override
+                        public void onSuccess() {
+                            Log.d("createGroup", "P2P Group created");
+                        }
+
+                        @Override
+                        public void onFailure(int reason) {
+                            Log.d("createGroup", "P2P Group failed");
+                            Toast.makeText(activity, "P2P Group failed", Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(activity, MainActivity.class);
+                            activity.startActivity(intent);
+                            activity.finish();
+                        }
+                    });
+                }
             } else {
                 ((ManagerInterface) activity).setIsWifiP2pEnabled(false);
                 //activity.resetData();
@@ -61,8 +82,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
             if (manager != null) {
                 if ("LobbyActivity".equals(((ManagerInterface) activity).getActivityName())) {
                     manager.requestPeers(channel, (WifiP2pManager.PeerListListener) activity.getFragmentManager().findFragmentById(R.id.frag_list));
-                } else if ("RoomActvity".equals(((ManagerInterface) activity).getActivityName())) {
-                    // TODO
                 }
             }
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
@@ -70,24 +89,25 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
                 return;
             }
 
-            if ("LobbyActivity".equals(((ManagerInterface) activity).getActivityName())) {
+            if ("RoomActivity".equals(((ManagerInterface) activity).getActivityName()) && "Player".equals(((RoomActivity) activity).getUserType())) {
                 NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-                Toast.makeText(activity, "GOING TO ROOM", Toast.LENGTH_SHORT).show();
                 if (networkInfo.isConnected()) {
-                    Toast.makeText(activity, "CONNECTED", Toast.LENGTH_SHORT).show();
+                    //Launch receiver and sender once connected to someone
+                    if (!Receiver.running) {
+                        Receiver r = new Receiver(this.activity);
+                        new Thread(r).start();
+                        Sender s = new Sender();
+                        new Thread(s).start();
+                    }
 
-                    intent = new Intent(activity, RoomActivity.class);
-                    intent.putExtra("Type", "Player");
-                    activity.startActivity(intent);
-                } else {
-                    Toast.makeText(activity, "DISCONNECTED", Toast.LENGTH_SHORT).show();
+                    ((RoomActivity) activity).sendFirstPacket();
                 }
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action))
         {
             if ("RoomActivity".equals(((ManagerInterface) activity).getActivityName()))
             {
-                Toast.makeText(activity, "WIFI_P2P_THIS_DEVICE_CHANGED_ACTION", Toast.LENGTH_SHORT).show();;
+                Toast.makeText(activity, "WIFI_P2P_THIS_DEVICE_CHANGED_ACTION", Toast.LENGTH_SHORT).show();
 
                 MAC = ((WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceAddress;
 
