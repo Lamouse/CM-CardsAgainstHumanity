@@ -16,7 +16,9 @@
         android:id="@id/android:empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:text="No devices found. Turn on P2P and perform discovery from the Action Bar" />
+        android:gravity="center"
+        android:typeface="monospace"
+        android:textColor="@color/colorBlack"
+        android:text="@string/NoDevicesFound" />
 
 </LinearLayout>

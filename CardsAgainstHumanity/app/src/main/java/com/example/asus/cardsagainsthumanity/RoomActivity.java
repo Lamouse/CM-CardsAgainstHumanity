@@ -57,8 +57,6 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             userType = (String) savedInstanceState.getSerializable("Type");
         }
 
-        Log.wtf("userType" , userType);
-
         // Set peer2peer actions
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
@@ -122,23 +120,23 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             @Override
             public void onGroupInfoAvailable(WifiP2pGroup group)
             {
-                if (group != null)
+            if (group != null)
+            {
+                manager.removeGroup(channel, new WifiP2pManager.ActionListener()
                 {
-                    manager.removeGroup(channel, new WifiP2pManager.ActionListener()
+                    @Override
+                    public void onSuccess()
                     {
-                        @Override
-                        public void onSuccess()
-                        {
-                            System.out.println("Success");
-                        }
+                        System.out.println("Success");
+                    }
 
-                        @Override
-                        public void onFailure(int reason)
-                        {
-                            System.out.println("Failure " + reason);
-                        }
-                    });
-                }
+                    @Override
+                    public void onFailure(int reason)
+                    {
+                        System.out.println("Failure " + reason);
+                    }
+                });
+            }
             }
         });
     }
@@ -196,54 +194,58 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                 @Override
                 public void onGroupInfoAvailable(WifiP2pGroup group) {
-                    if (group != null) {
-                        manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
-                            @Override
-                            public void onSuccess() {
-                                System.out.println("Success");
+                if (group != null) {
+                    manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            System.out.println("Success");
 
-                                manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-                                    @Override
-                                    public void onSuccess() {
-                                        Log.wtf("Create Game: ", "P2P Group created");
+                            manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.wtf("Create Game: ", "P2P Group created");
 
-                                    }
+                                }
 
-                                    @Override
-                                    public void onFailure(int reason) {
-                                        Log.wtf("Create Game: ", "P2P Group failed");
-                                    }
-                                });
-                            }
+                                @Override
+                                public void onFailure(int reason) {
+                                    Log.wtf("Create Game: ", "P2P Group failed");
 
-                            @Override
-                            public void onFailure(int reason) {
-                                System.out.println("Failure " + reason);
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+                        }
 
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-                    } else {
-                        manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.wtf("Create Game: ", "P2P Group created");
+                        @Override
+                        public void onFailure(int reason) {
+                            System.out.println("Failure " + reason);
 
-                            }
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+                } else {
+                    manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+                        @Override
+                        public void onSuccess() {
+                            Log.wtf("Create Game: ", "P2P Group created");
 
-                            @Override
-                            public void onFailure(int reason) {
-                                Log.wtf("Create Game: ", "P2P Group failed");
+                        }
 
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
+                        @Override
+                        public void onFailure(int reason) {
+                            Log.wtf("Create Game: ", "P2P Group failed");
 
-                    }
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+
+                }
                 }
             });
         }
