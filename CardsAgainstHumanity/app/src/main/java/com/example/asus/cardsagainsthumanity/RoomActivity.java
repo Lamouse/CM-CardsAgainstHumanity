@@ -54,8 +54,8 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
 
         removeGroup();
 
-        Intent intent = getIntent();
-        String userType = intent.getStringExtra("Type");
+        Bundle p = getIntent().getExtras();
+        String userType = p.getString("Type", null);
         if (userType.equals("Owner")) // If owner, create a group
         {
             createGameRoom();
