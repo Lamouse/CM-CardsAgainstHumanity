@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,11 +27,11 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
 {
     private WifiP2pManager manager;
     private WifiP2pManager.Channel channel;
-    private Activity activity;
+    private AppCompatActivity activity;
 
     public static String macAddress;
 
-    public WifiDirectBroadcastReceiver(WifiP2pManager pManager, WifiP2pManager.Channel pChannel, Activity pActivity) {
+    public WifiDirectBroadcastReceiver(WifiP2pManager pManager, WifiP2pManager.Channel pChannel, AppCompatActivity pActivity) {
         super();
         manager = pManager;
         channel = pChannel;

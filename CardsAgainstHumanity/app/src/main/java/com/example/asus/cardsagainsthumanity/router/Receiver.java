@@ -11,7 +11,7 @@ import com.example.asus.cardsagainsthumanity.config.Configuration;
 import com.example.asus.cardsagainsthumanity.router.tcp.TcpReciever;
 // import com.ecse414.android.echo.ui.DeviceDetailFragment;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 /**
@@ -29,13 +29,13 @@ public class Receiver implements Runnable {
 	/**
 	 * A ref to the activity
 	 */
-	static Activity activity;
+	static AppCompatActivity activity;
 
 	/**
 	 * Constructor with activity
 	 * @param a
 	 */
-	public Receiver(Activity a) {
+	public Receiver(AppCompatActivity a) {
 		Receiver.activity = a;
 		running = true;
 	}
@@ -226,13 +226,14 @@ public class Receiver implements Runnable {
 	/**
 	 * Update the list of peers on the front page
 	 */
-	public void updatePeerList() {
+	public static void updatePeerList() {
 		if (activity == null)
 			return;
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-                // FIXME: Fazer append
+				RoomPeersFragment fragment = (RoomPeersFragment) activity.getSupportFragmentManager().findFragmentById(R.id.room_peers_list);
+                fragment.updateRoomPeers();
 			}
 		});
 	}

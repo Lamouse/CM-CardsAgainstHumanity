@@ -6,7 +6,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RoomPeersFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link RoomPeersFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class RoomPeersFragment extends ListFragment
 {
     public List<AllEncompasingP2PClient> peers = new ArrayList<>();
@@ -83,26 +74,6 @@ public class RoomPeersFragment extends ListFragment
         }
     }
 
-    @Override
-    public void onAttach(Activity activity)
-    {
-        super.onAttach(activity);
-        try
-        {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e)
-        {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach()
-    {
-        super.onDetach();
-        mListener = null;
-    }
 
     /**
      * This interface must be implemented by activities that contain this

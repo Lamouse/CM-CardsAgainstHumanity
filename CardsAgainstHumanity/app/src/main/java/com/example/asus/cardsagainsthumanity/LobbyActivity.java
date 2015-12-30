@@ -133,7 +133,7 @@ public class LobbyActivity extends AppCompatActivity implements ManagerInterface
                 return true;
             }
 
-            final DeviceListFragment fragment = (DeviceListFragment) getFragmentManager().findFragmentById(
+            final DeviceListFragment fragment = (DeviceListFragment) getSupportFragmentManager().findFragmentById(
                     R.id.frag_list);
             fragment.onInitiateDiscovery();
             searchPeers();
