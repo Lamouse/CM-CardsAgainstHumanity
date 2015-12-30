@@ -207,9 +207,6 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                                     public void onSuccess() {
                                         Log.wtf("Create Game: ", "P2P Group created");
 
-                                        Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
-                                        intent.putExtra("Type", "Owner");
-                                        startActivity(intent);
                                     }
 
                                     @Override
@@ -222,6 +219,10 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                             @Override
                             public void onFailure(int reason) {
                                 System.out.println("Failure " + reason);
+
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         });
                     } else {
@@ -230,13 +231,15 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                             public void onSuccess() {
                                 Log.wtf("Create Game: ", "P2P Group created");
 
-                                Intent intent = new Intent(getApplicationContext(), RoomActivity.class);
-                                startActivity(intent);
                             }
 
                             @Override
                             public void onFailure(int reason) {
                                 Log.wtf("Create Game: ", "P2P Group failed");
+
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         });
 
@@ -246,11 +249,11 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         }
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
-        Log.d("CDA", "onBackPressed Called");
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-    }
+        finish();
+    }*/
 }
