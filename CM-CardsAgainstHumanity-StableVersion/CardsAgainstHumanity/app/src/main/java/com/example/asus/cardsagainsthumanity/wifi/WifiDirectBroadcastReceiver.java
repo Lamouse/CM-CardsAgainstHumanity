@@ -28,6 +28,10 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
     private WifiP2pManager.Channel channel;
     private Activity activity;
 
+    private Thread senderThread = null;
+    private Thread receiverThread = null;
+    private Receiver r;
+
     public static String MAC;
 
     public WifiDirectBroadcastReceiver(WifiP2pManager pManager, WifiP2pManager.Channel pChannel, Activity pActivity) {
@@ -131,13 +135,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
                 NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
                 if (networkInfo.isConnected()) {
                     //Launch receiver and sender once connected to someone
-                    if (!Receiver.running) {
-                        Receiver r = new Receiver(this.activity);
-                        new Thread(r).start();
-                        Sender s = new Sender();
-                        new Thread(s).start();
-                    }
-
                     ((RoomActivity) activity).sendFirstPacket();
                 }
                 else{
@@ -164,10 +161,13 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
 
                 //Launch receiver and sender once connected to someone
                 if (!Receiver.running) {
-                    Receiver r = new Receiver(this.activity);
-                    new Thread(r).start();
-                    Sender s = new Sender();
-                    new Thread(s).start();
+                    Toast.makeText(activity, "RUNNINGCREATE", Toast.LENGTH_LONG).show();
+
+                    new Thread(new Receiver(this.activity)).start();
+                    new Thread(new Sender()).start();
+                }
+                else {
+                    Receiver.setActivity(this.activity);
                 }
 
                 manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {

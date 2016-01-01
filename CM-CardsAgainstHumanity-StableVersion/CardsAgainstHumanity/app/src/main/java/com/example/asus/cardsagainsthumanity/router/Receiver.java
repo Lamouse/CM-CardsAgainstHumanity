@@ -240,4 +240,7 @@ public class Receiver implements Runnable {
 		});
 	}
 
+	public static void setActivity(Activity activity) {
+		Receiver.activity = activity;
+	}
 }
