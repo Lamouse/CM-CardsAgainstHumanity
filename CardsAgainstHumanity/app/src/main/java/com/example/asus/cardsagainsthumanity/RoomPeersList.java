@@ -113,7 +113,7 @@ public class RoomPeersList extends ListFragment
 
         for (AllEncompasingP2PClient cPeer : MeshNetworkManager.routingTable.values())
         {
-            if (cPeer != null)
+            if (cPeer != null && !MeshNetworkManager.getSelf().getMac().equals(cPeer.getMac()))
             {
                 peers.add(cPeer);
             }

@@ -204,6 +204,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         super.onDestroy();
 
         if (manager != null && channel != null) {
+            Sender.queuePacket(new Packet(Packet.TYPE.BYE, new byte[0], null, WifiDirectBroadcastReceiver.MAC));
             removeGroup();
         }
     }

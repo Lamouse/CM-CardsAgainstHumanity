@@ -103,6 +103,10 @@ public class Receiver implements Runnable {
 				Sender.queuePacket(ack);
 				somebodyJoined(p.getSenderMac());
 				updatePeerList();
+			} else if (p.getType().equals(Packet.TYPE.BYE)) {
+				MeshNetworkManager.routingTable.remove(p.getSenderMac());
+				Receiver.somebodyLeft(p.getSenderMac());
+				Receiver.updatePeerList();
 			} else {
 				// If you're the intended target for a non hello message
 				if (p.getMac().equals(MeshNetworkManager.getSelf().getMac())) {
