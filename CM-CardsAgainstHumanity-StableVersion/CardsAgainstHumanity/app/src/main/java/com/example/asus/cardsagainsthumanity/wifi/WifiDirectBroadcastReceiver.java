@@ -52,21 +52,59 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
 
                 if ("RoomActivity".equals(((ManagerInterface) activity).getActivityName()) && "Owner".equals(((RoomActivity) activity).getUserType()))
                 {
-                    manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-
+                    manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                         @Override
-                        public void onSuccess() {
-                            Log.d("createGroup", "P2P Group created");
+                        public void onGroupInfoAvailable(WifiP2pGroup group) {
+                        if (group != null) {
+                            manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+                                @Override
+                                public void onSuccess() {
+
+                                    manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            Log.d("createGroup", "P2P Group created");
+                                        }
+
+                                        @Override
+                                        public void onFailure(int reason) {
+                                            Log.d("createGroup", "P2P Group failed");
+
+                                            Intent intent = new Intent(activity, MainActivity.class);
+                                            activity.startActivity(intent);
+                                            activity.finish();
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onFailure(int reason) {
+                                    Log.d("createGroup", "P2P Group failed");
+
+                                    Intent intent = new Intent(activity, MainActivity.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                            });
+                        } else {
+                            manager.createGroup(channel, new WifiP2pManager.ActionListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("createGroup", "P2P Group created");
+                                }
+
+                                @Override
+                                public void onFailure(int reason) {
+                                    Log.d("createGroup", "P2P Group failed");
+                                    Toast.makeText(activity, "P2P Group failed", Toast.LENGTH_LONG).show();
+
+                                    Intent intent = new Intent(activity, MainActivity.class);
+                                    activity.startActivity(intent);
+                                    activity.finish();
+                                }
+                            });
+
                         }
-
-                        @Override
-                        public void onFailure(int reason) {
-                            Log.d("createGroup", "P2P Group failed");
-                            Toast.makeText(activity, "P2P Group failed", Toast.LENGTH_LONG).show();
-
-                            Intent intent = new Intent(activity, MainActivity.class);
-                            activity.startActivity(intent);
-                            activity.finish();
                         }
                     });
                 }
@@ -101,6 +139,13 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
                     }
 
                     ((RoomActivity) activity).sendFirstPacket();
+                }
+                else{
+                    Toast.makeText(activity, "Connection Recused", Toast.LENGTH_LONG).show();
+
+                    /*Intent intent1 = new Intent(activity, MainActivity.class);
+                    activity.startActivity(intent);
+                    activity.finish();*/
                 }
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action))

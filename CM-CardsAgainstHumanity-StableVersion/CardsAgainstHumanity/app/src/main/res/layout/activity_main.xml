@@ -1,18 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:weightSum="1.0"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:background="@color/colorBlack">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create Game"
-        android:onClick="createGame"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:layout_margin="10dp"
+        android:weightSum="1.0"
+        android:orientation="horizontal">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Join Game"
-        android:onClick="joinGame"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="0.4"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:src="@drawable/logo"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="0.6"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textSize="30dp"
+            android:text="Cards Agains Humanity"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:weightSum="1.0"
+        android:orientation="vertical">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:background="@color/colorWhite"
+            android:textColor="@color/colorBlack"
+            android:layout_marginBottom="1dp"
+            android:typeface="monospace"
+            android:textSize="20dp"
+            android:text="Create Game"
+            android:onClick="createGame"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:background="@color/colorWhite"
+            android:textColor="@color/colorBlack"
+            android:layout_marginTop="1dp"
+            android:typeface="monospace"
+            android:textSize="20dp"
+            android:text="Join Game"
+            android:onClick="joinGame"/>
+
+    </LinearLayout>
 
 </LinearLayout>

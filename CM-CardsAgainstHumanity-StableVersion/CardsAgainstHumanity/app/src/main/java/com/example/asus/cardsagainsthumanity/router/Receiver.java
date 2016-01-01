@@ -66,7 +66,7 @@ public class Receiver implements Runnable {
 			 */
 			while (packetQueue.isEmpty()) {
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(125);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

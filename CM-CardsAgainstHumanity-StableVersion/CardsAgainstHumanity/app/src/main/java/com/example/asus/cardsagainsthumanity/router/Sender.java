@@ -47,7 +47,7 @@ public class Sender implements Runnable {
 			//Sleep to give up CPU cycles
 			while (ccl.isEmpty()) {
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(125);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

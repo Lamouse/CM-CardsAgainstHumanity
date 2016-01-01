@@ -103,7 +103,7 @@ public class RoomPeersList extends ListFragment
 
     public void updateRoomPeers()
     {
-        Toast.makeText(getActivity(), "Updating Peers List "+MeshNetworkManager.routingTable.values().size(), Toast.LENGTH_LONG).show();
+        // Toast.makeText(getActivity(), "Updating Peers List "+MeshNetworkManager.routingTable.values().size(), Toast.LENGTH_LONG).show();
 
         peers.clear();
         if (MeshNetworkManager.routingTable ==  null || MeshNetworkManager.routingTable.values().size() <= 0)

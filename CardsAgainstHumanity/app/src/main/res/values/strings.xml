@@ -96,12 +96,7 @@
     <string name="okay">Okay</string>
     <string name="scoreTable">Score Table</string>
     <string name="title_activity_create_game">CreateGame</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_room">RoomActivity</string>
     <string name="title_activity_lobby">Join a Game</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="NoDevicesFound">Make sure that there are game room created and then perform discovery from the Action Bar. Or try to create a new game room.</string>
 </resources>
