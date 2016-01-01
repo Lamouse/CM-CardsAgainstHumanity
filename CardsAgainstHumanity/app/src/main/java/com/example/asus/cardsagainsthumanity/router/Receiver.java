@@ -4,14 +4,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 // import com.ecse414.android.echo.MessageActivity;
 // import com.ecse414.android.echo.WiFiDirectActivity;
-import com.example.asus.cardsagainsthumanity.ManagerInterface;
-import com.example.asus.cardsagainsthumanity.R;
-import com.example.asus.cardsagainsthumanity.RoomPeersFragment;
+import com.example.asus.cardsagainsthumanity.RoomActivity;
+import com.example.asus.cardsagainsthumanity.RoomPeersList;
 import com.example.asus.cardsagainsthumanity.config.Configuration;
 import com.example.asus.cardsagainsthumanity.router.tcp.TcpReciever;
 // import com.ecse414.android.echo.ui.DeviceDetailFragment;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -29,13 +29,13 @@ public class Receiver implements Runnable {
 	/**
 	 * A ref to the activity
 	 */
-	static AppCompatActivity activity;
+	static Activity activity;
 
 	/**
 	 * Constructor with activity
 	 * @param a
 	 */
-	public Receiver(AppCompatActivity a) {
+	public Receiver(Activity a) {
 		Receiver.activity = a;
 		running = true;
 	}
@@ -49,6 +49,7 @@ public class Receiver implements Runnable {
 		 */
 		ConcurrentLinkedQueue<Packet> packetQueue = new ConcurrentLinkedQueue<Packet>();
 
+		Log.wtf("RECEIVER", "OPENED");
 		/*
 		 * Receiver thread 
 		 */
@@ -65,7 +66,7 @@ public class Receiver implements Runnable {
 			 */
 			while (packetQueue.isEmpty()) {
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(125);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -76,6 +77,7 @@ public class Receiver implements Runnable {
 			 */
 			p = packetQueue.remove();
 
+			Log.wtf("PACKET", "RECEIVED");
 			/*
 			 * If it's a hello, this is special and need to go through the connection mechanism for any node receiving this
 			 */
@@ -229,13 +231,16 @@ public class Receiver implements Runnable {
 	public static void updatePeerList() {
 		if (activity == null)
 			return;
+
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				RoomPeersFragment fragment = (RoomPeersFragment) activity.getSupportFragmentManager().findFragmentById(R.id.room_peers_list);
-                fragment.updateRoomPeers();
+				((RoomActivity) activity).updatePeersList();
 			}
 		});
 	}
 
+	public static void setActivity(Activity activity) {
+		Receiver.activity = activity;
+	}
 }

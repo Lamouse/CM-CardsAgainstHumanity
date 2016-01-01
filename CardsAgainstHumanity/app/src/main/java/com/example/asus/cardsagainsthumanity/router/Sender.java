@@ -1,5 +1,8 @@
 package com.example.asus.cardsagainsthumanity.router;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.example.asus.cardsagainsthumanity.config.Configuration;
@@ -44,12 +47,13 @@ public class Sender implements Runnable {
 			//Sleep to give up CPU cycles
 			while (ccl.isEmpty()) {
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(125);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 
+			Log.wtf("PacketToSend", "Now");
 			Packet p = ccl.remove();
 			String ip = MeshNetworkManager.getIPForClient(p.getMac());
 			packetSender.sendPacket(ip, Configuration.RECEIVE_PORT, p);

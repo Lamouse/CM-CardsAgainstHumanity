@@ -1,17 +1,24 @@
 package com.example.asus.cardsagainsthumanity;
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
-import android.os.Build;
+import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pGroup;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
+import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
 
 public class MainActivity extends AppCompatActivity
@@ -36,11 +43,13 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void joinGame(View view)
+    {
+        Intent intent = new Intent(this, LobbyActivity.class);
+        startActivity(intent);
     }
 
     public void createGame(View view)
@@ -50,16 +59,11 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "Enable P2P", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
         }
-        else {
+        else
+        {
             Intent intent = new Intent(this, RoomActivity.class);
             intent.putExtra("Type", "Owner");
             startActivity(intent);
         }
-    }
-
-    public void joinGame(View view)
-    {
-        Intent intent = new Intent(this, LobbyActivity.class);
-        startActivity(intent);
     }
 }

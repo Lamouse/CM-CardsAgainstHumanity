@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.provider.Settings;
@@ -22,13 +24,12 @@ import com.example.asus.cardsagainsthumanity.router.Packet;
 import com.example.asus.cardsagainsthumanity.router.Sender;
 import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
-import java.util.ArrayList;
-
 public class RoomActivity extends AppCompatActivity implements ManagerInterface
 {
     private WifiP2pManager manager;
     private boolean isWifiP2pEnabled = false;
     private boolean retryChannel = false;
+    private String userType;
 
     private final IntentFilter intentFilter = new IntentFilter();
     private final IntentFilter wifiIntentFilter = new IntentFilter();
@@ -39,13 +40,27 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
     private boolean isWifiConnected;
     public boolean isVisible = true;
 
+
+    @Override
+    public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
+        this.isWifiP2pEnabled = isWifiP2pEnabled;
+    }
+
+    @Override
+    public String getActivityName() {
+        return "RoomActivity";
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
-        String userType;
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
@@ -66,27 +81,33 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
 
-        removeGroup();
+        // removeGroup();
 
-        if (userType.equals("Owner")) // If owner, create a group
+        if (userType.equals("Owner"))
         {
-            createGameRoom();
+            Log.wtf("Is owner:", "Creating room");
+            // isto depois e tratado o WiFiDirectBroadcastReceiver
         }
-        else if (userType.equals("Player")) // If player, send a hello message to get routing table from owner
+        else if (userType.equals("Player"))
         {
-            Sender.queuePacket(new Packet(Packet.TYPE.HELLO, new byte[0], null, WifiDirectBroadcastReceiver.macAddress));
+            String deviceAddress;
+            if (savedInstanceState == null) {
+                Bundle extras = getIntent().getExtras();
+                if(extras == null) {
+                    deviceAddress = null;
+                } else {
+                    deviceAddress = extras.getString("Device");
+                }
+            } else {
+                deviceAddress = (String) savedInstanceState.getSerializable("Device");
+            }
+
+            WifiP2pConfig config = new WifiP2pConfig();
+            config.deviceAddress = deviceAddress;
+            config.wps.setup = WpsInfo.PBC;
+
+            connect(config);
         }
-    }
-
-    @Override
-    public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled)
-    {
-
-    }
-
-    @Override
-    public String getActivityName() {
-        return "RoomActivity";
     }
 
     @Override
@@ -105,40 +126,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    private void removeGroup() {
-        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener()
-        {
-            @Override
-            public void onGroupInfoAvailable(WifiP2pGroup group)
-            {
-            if (group != null)
-            {
-                manager.removeGroup(channel, new WifiP2pManager.ActionListener()
-                {
-                    @Override
-                    public void onSuccess()
-                    {
-                        System.out.println("Success");
-                    }
-
-                    @Override
-                    public void onFailure(int reason)
-                    {
-                        System.out.println("Failure " + reason);
-                    }
-                });
-            }
-            }
-        });
     }
 
     @Override
@@ -148,6 +136,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             @Override
             public void onSuccess() {
                 // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
+                Toast.makeText(RoomActivity.this, "Connect Successful.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -157,7 +146,40 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         });
     }
 
-    /** register the BroadcastReceiver with the intent values to be matched */
+    public void updatePeersList()
+    {
+        Log.d("updatePeersList", "Enter");
+        RoomPeersList fragment = (RoomPeersList) getSupportFragmentManager().findFragmentById(R.id.room_peers_list);
+        fragment.updateRoomPeers();
+    }
+
+    private void removeGroup() {
+        manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
+            @Override
+            public void onGroupInfoAvailable(WifiP2pGroup group) {
+            if (group != null) {
+                manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
+                    @Override
+                    public void onSuccess() {
+                        System.out.println("Success");
+                    }
+
+                    @Override
+                    public void onFailure(int reason) {
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+            }
+        });
+    }
+
+    public void sendFirstPacket() {
+        Sender.queuePacket(new Packet(Packet.TYPE.HELLO, new byte[0], null, WifiDirectBroadcastReceiver.MAC));
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -165,8 +187,6 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         if (manager != null && channel != null) {
             receiver = new WifiDirectBroadcastReceiver(manager, channel, this);
             registerReceiver(receiver, intentFilter);
-
-            removeGroup();
         }
         this.isVisible = true;
     }
@@ -177,85 +197,22 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
 
         if (receiver != null)
             unregisterReceiver(receiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
         if (manager != null && channel != null) {
             removeGroup();
         }
     }
 
-    public void createGameRoom()
-    {
-        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-        if (!wifi.isWifiEnabled()){
-            Toast.makeText(RoomActivity.this, "Enable P2P", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-        }
-        else {
-            manager.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
-                @Override
-                public void onGroupInfoAvailable(WifiP2pGroup group) {
-                if (group != null) {
-                    manager.removeGroup(channel, new WifiP2pManager.ActionListener() {
-                        @Override
-                        public void onSuccess() {
-                            System.out.println("Success");
-
-                            manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-                                @Override
-                                public void onSuccess() {
-                                    Log.wtf("Create Game: ", "P2P Group created");
-
-                                }
-
-                                @Override
-                                public void onFailure(int reason) {
-                                    Log.wtf("Create Game: ", "P2P Group failed");
-
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(int reason) {
-                            System.out.println("Failure " + reason);
-
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
-                } else {
-                    manager.createGroup(channel, new WifiP2pManager.ActionListener() {
-                        @Override
-                        public void onSuccess() {
-                            Log.wtf("Create Game: ", "P2P Group created");
-
-                        }
-
-                        @Override
-                        public void onFailure(int reason) {
-                            Log.wtf("Create Game: ", "P2P Group failed");
-
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
-
-                }
-                }
-            });
-        }
-    }
-
-    /*@Override
+    @Override
     public void onBackPressed() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
-    }*/
+    }
 }

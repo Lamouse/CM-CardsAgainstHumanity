@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:background="?android:attr/activatedBackgroundIndicator"
-    android:padding="6dip" >
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:layout_margin="6dip" >
 
     <ImageView
         android:id="@+id/icon"
@@ -16,6 +16,7 @@
         android:layout_width="0dip"
         android:layout_height="fill_parent"
         android:layout_weight="1"
+        android:paddingLeft="6dip"
         android:orientation="vertical" >
 
         <TextView
@@ -23,6 +24,8 @@
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
+            android:typeface="monospace"
+            android:textColor="@color/colorBlack"
             android:gravity="center_vertical" />
 
         <TextView
@@ -30,6 +33,8 @@
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
+            android:typeface="monospace"
+            android:textColor="@color/colorBlack"
             android:ellipsize="marquee"
             android:singleLine="true" />
     </LinearLayout>

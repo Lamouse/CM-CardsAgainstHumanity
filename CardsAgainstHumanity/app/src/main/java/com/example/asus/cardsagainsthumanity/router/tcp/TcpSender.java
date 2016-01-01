@@ -1,5 +1,7 @@
 package com.example.asus.cardsagainsthumanity.router.tcp;
 
+import android.util.Log;
+
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -11,7 +13,7 @@ import com.example.asus.cardsagainsthumanity.router.Receiver;
 
 /**
  * Runner for dequeueing packets from packets to send, and issues the TCP connection to send them
- * 
+ *
  * @author Matthew Vertescher
  * @author Peter Henderson
  *
@@ -30,6 +32,7 @@ public class TcpSender {
 			tcpSocket.connect(new InetSocketAddress(serverAddr, port), 5000);
 
 		} catch (Exception e) {
+			Log.wtf("PacketToSend", "error1: " + ip);
 			/*
 			 * If can't connect assume that they left the chat and remove them
 			 */
@@ -50,6 +53,8 @@ public class TcpSender {
 			tcpSocket.close();
 
 		} catch (Exception e) {
+			Log.wtf("PacketToSend", "error2: " + ip);
+
 			MeshNetworkManager.routingTable.remove(data.getMac());
 			Receiver.somebodyLeft(data.getMac());
 			Receiver.updatePeerList();

@@ -1,5 +1,7 @@
 package com.example.asus.cardsagainsthumanity.router.tcp;
 
+import android.util.Log;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +30,7 @@ public class TcpReciever implements Runnable {
 	public TcpReciever(int port, ConcurrentLinkedQueue<Packet> queue) {
 		try {
 			this.serverSocket = new ServerSocket(port);
+			Log.d("Server socket create: ", Integer.toString(port));
 		} catch (IOException e) {
 			System.err.println("Server socket on port " + port + " could not be created. ");
 			e.printStackTrace();
