@@ -12,14 +12,14 @@ import com.example.asus.cardsagainsthumanity.game.utils.AnswerArrayAdapter;
 
 import java.util.ArrayList;
 
-public class GameActivity extends AppCompatActivity {
+public class PlayerPick extends AppCompatActivity {
     private ArrayList<String> playerNames;
     private ArrayList<Integer> playerPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.activity_player_pick);
 
         playerNames = new ArrayList<String>();
         playerNames.add("Player1");
