@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 import com.example.asus.cardsagainsthumanity.game.utils.AnswerArrayAdapter;
+import com.example.asus.cardsagainsthumanity.game.utils.ViewAnswerArrayAdapter;
 
 import java.util.ArrayList;
 
@@ -67,15 +68,8 @@ public class PlayerWait extends AppCompatActivity implements ManagerInterface
                 "Android Example List View"
         };
 
-        final AnswerArrayAdapter adapter = new AnswerArrayAdapter(this, values);
+        final ViewAnswerArrayAdapter adapter = new ViewAnswerArrayAdapter(this, values, null);
         listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                adapter.itemClicked(position);
-            }
-        });
     }
 
     public void openScoreTable(View view) {

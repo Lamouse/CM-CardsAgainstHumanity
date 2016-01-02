@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 import com.example.asus.cardsagainsthumanity.game.utils.AnswerArrayAdapter;
+import com.example.asus.cardsagainsthumanity.game.utils.ViewAnswerArrayAdapter;
 
 import java.util.ArrayList;
 
@@ -66,7 +67,7 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
                 "Android Example List View"
         };
 
-        final AnswerArrayAdapter adapter = new AnswerArrayAdapter(this, values);
+        final ViewAnswerArrayAdapter adapter = new ViewAnswerArrayAdapter(this, values, values);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
