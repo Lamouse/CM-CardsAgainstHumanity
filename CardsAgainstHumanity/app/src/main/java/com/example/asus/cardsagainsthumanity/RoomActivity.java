@@ -19,7 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.asus.cardsagainsthumanity.R;
+import com.example.asus.cardsagainsthumanity.game.PlayerPick;
 import com.example.asus.cardsagainsthumanity.router.Packet;
 import com.example.asus.cardsagainsthumanity.router.Sender;
 import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
@@ -211,7 +211,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

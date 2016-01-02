@@ -39,6 +39,11 @@
             android:label="@string/title_activity_lobby" >
         </activity>
         <activity
+            android:name=".game.PlayerPick"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
             android:name=".game.PlayerWait"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" >

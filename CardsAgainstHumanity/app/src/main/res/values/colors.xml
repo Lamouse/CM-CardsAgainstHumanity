@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorNearBlack">#161616</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorDarkGray">#383838</color>
     <color name="colorLightGray">#BEBEBE</color>
