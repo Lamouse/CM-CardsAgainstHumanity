@@ -52,7 +52,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
 
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                 // Wifi Direct mode is enabled
-                ((ManagerInterface) activity).setIsWifiP2pEnabled(true);
+                // ((ManagerInterface) activity).setIsWifiP2pEnabled(true);
 
                 if ("RoomActivity".equals(((ManagerInterface) activity).getActivityName()) && "Owner".equals(((RoomActivity) activity).getUserType()))
                 {
@@ -112,11 +112,10 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
                         }
                     });
                 }
-            } else {
+            } /*else {
                 ((ManagerInterface) activity).setIsWifiP2pEnabled(false);
-                //activity.resetData();
-
-            }
+                activity.resetData();
+            }*/
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
             // request available peers from the wifi p2p manager. This is an
             // asynchronous call and the calling activity is notified with a

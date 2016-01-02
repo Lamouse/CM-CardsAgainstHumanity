@@ -22,22 +22,13 @@ import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 public class LobbyActivity extends AppCompatActivity implements ManagerInterface
 {
     private WifiP2pManager manager;
-    private boolean isWifiP2pEnabled = false;
-    private boolean retryChannel = false;
 
     private final IntentFilter intentFilter = new IntentFilter();
-    private final IntentFilter wifiIntentFilter = new IntentFilter();
     private WifiP2pManager.Channel channel;
     private BroadcastReceiver receiver = null;
 
-    WifiManager wifiManager;
-    private boolean isWifiConnected;
     public boolean isVisible = true;
 
-    @Override
-    public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
-        this.isWifiP2pEnabled = isWifiP2pEnabled;
-    }
 
     @Override
     public String getActivityName() {
@@ -140,22 +131,6 @@ public class LobbyActivity extends AppCompatActivity implements ManagerInterface
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void connect(WifiP2pConfig config) {
-        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
-
-            @Override
-            public void onSuccess() {
-                // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
-            }
-
-            @Override
-            public void onFailure(int reason) {
-                Toast.makeText(LobbyActivity.this, "Connect failed. Retry.", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     /** register the BroadcastReceiver with the intent values to be matched */

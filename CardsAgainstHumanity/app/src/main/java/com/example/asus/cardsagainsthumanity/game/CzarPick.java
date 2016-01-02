@@ -1,18 +1,14 @@
 package com.example.asus.cardsagainsthumanity.game;
 
-import android.content.Intent;
-import android.net.wifi.p2p.WifiP2pConfig;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
-import com.example.asus.cardsagainsthumanity.game.utils.AnswerArrayAdapter;
 import com.example.asus.cardsagainsthumanity.router.Receiver;
 import com.example.asus.cardsagainsthumanity.game.utils.ViewAnswerArrayAdapter;
 
@@ -76,19 +72,9 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
     }
 
     @Override
-    public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled)
-    {
-    }
-
-    @Override
     public String getActivityName()
     {
         return "CzarPick";
-    }
-
-    @Override
-    public void connect(WifiP2pConfig config)
-    {
     }
 
     private void updateList()
@@ -96,7 +82,7 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
         final ListView listView = (ListView) findViewById(R.id.answerList);
         String[] answersArray = answers.toArray(new String[answers.size()]);
 
-        final AnswerArrayAdapter adapter = new AnswerArrayAdapter(this, answersArray);
+        final ViewAnswerArrayAdapter adapter = new ViewAnswerArrayAdapter(this, answersArray, answersArray);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()

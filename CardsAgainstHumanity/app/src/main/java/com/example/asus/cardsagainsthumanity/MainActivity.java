@@ -1,31 +1,17 @@
 package com.example.asus.cardsagainsthumanity;
 
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.wifi.WifiManager;
-import android.net.wifi.p2p.WifiP2pConfig;
-import android.net.wifi.p2p.WifiP2pGroup;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.asus.cardsagainsthumanity.database.DatabaseHelper;
-import com.example.asus.cardsagainsthumanity.game.CzarPick;
-import com.example.asus.cardsagainsthumanity.game.FinalRound;
-import com.example.asus.cardsagainsthumanity.game.PlayerPick;
-import com.example.asus.cardsagainsthumanity.game.PlayerWait;
-import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
 
 public class MainActivity extends AppCompatActivity

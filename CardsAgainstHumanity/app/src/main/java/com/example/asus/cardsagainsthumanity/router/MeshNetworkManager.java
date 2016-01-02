@@ -135,7 +135,7 @@ public class MeshNetworkManager {
 	 * the relevant Group Owner or sends to all group owners if group owner not
 	 * in mesh
 	 * 
-	 * @param c
+	 * @param mac
 	 */
 	public static String getIPForClient(String mac) {
 

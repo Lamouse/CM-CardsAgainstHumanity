@@ -57,4 +57,18 @@ public class AnswerArrayAdapter extends ArrayAdapter<String> {
 
         notifyDataSetChanged();
     }
+
+    public int getClickedItensSize() {
+        return clickedItens.size();
+    }
+
+    public ArrayList<String> getClickedItens() {
+        ArrayList<String> result = new ArrayList<>();
+
+        for(int i : clickedItens) {
+            result.add(values[i]);
+        }
+
+        return result;
+    }
 }
