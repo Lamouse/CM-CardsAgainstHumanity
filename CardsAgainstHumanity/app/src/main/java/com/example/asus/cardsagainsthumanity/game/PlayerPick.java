@@ -28,8 +28,17 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_pick);
 
-        Intent intent = getIntent();
-        String question = intent.getStringExtra("Question");
+        String question;
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                question = null;
+            } else {
+                question = extras.getString("Question");
+            }
+        } else {
+            question = (String) savedInstanceState.getSerializable("Question");
+        }
 
         TextView questionTextView = (TextView) findViewById(R.id.black_card);
         questionTextView.setText(question);

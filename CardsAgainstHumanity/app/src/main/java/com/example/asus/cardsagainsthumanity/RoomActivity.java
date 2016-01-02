@@ -183,7 +183,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                     }
                     Receiver.setActivity(RoomActivity.this);
                     Intent intent = new Intent(RoomActivity.this, CzarPick.class);
-                    intent.putExtra("Black Card", "This is a new question");
+                    intent.putExtra("Question", "This is a new question");
                     startActivity(intent);
                 }
             });

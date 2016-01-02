@@ -196,22 +196,31 @@ public class Receiver implements Runnable {
                             ("FinalRound".equals(((ManagerInterface) activity).getActivityName()))))
                     {
                         String data = new String(p.getData());
-                        List<String> args = Arrays.asList(data.split(","));
+                        String[] separated = data.split(",");
                         if (MeshNetworkManager.getSelf().getMac().equals(data))  // Check if user was delegated to be CZAR
                         {
                             MeshNetworkManager.getSelf().setIsCzar(true);
+                            // FIXME: Implement
                         }
                         else
                         {
                             MeshNetworkManager.getSelf().setIsCzar(false);
                             Intent intent = new Intent(activity, PlayerPick.class);
-                            intent.putExtra("Question", args.get(1));
+                            intent.putExtra("Question", separated[1]);
                             activity.startActivity(intent);
                         }
                     }
-                    else if (p.getType().equals(Packet.TYPE.WHITECARD))
+                    else if (p.getType().equals(Packet.TYPE.WHITECARD) && (("PlayerPick".equals(((ManagerInterface) activity).getActivityName()))
+                            || ("CzarPick".equals(((ManagerInterface) activity).getActivityName()))))
                     {
+                        if (MeshNetworkManager.getSelf().isCzar())
+                        {
+                            // Append card to list
+                        }
+                        else
+                        {
 
+                        }
                     }
                     else if (p.getType().equals(Packet.TYPE.BLACKCARD))
                     {
