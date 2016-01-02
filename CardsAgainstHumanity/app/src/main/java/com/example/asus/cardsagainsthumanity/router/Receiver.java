@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 // import com.ecse414.android.echo.MessageActivity;
 // import com.ecse414.android.echo.WiFiDirectActivity;
 import com.example.asus.cardsagainsthumanity.RoomActivity;
-import com.example.asus.cardsagainsthumanity.RoomPeersList;
+// import com.example.asus.cardsagainsthumanity.RoomPeersList;
 import com.example.asus.cardsagainsthumanity.config.Configuration;
 import com.example.asus.cardsagainsthumanity.router.tcp.TcpReciever;
 // import com.ecse414.android.echo.ui.DeviceDetailFragment;

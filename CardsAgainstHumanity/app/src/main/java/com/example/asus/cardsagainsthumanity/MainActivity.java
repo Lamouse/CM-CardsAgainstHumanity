@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pGroup;
@@ -18,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.asus.cardsagainsthumanity.database.DatabaseHelper;
 import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
 
@@ -27,6 +30,19 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*CODIGO DE TESTE DA DATABASE - 10 CARTAS ALEATORIAS, 5 PRETAS E 5 RESPOSTAS*/
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+        Cursor result;
+        for(int i=0;i<10;i++){
+            if(i%2==0)
+                result = db.getCard("white");
+            else
+                result = db.getCard("black");
+            result.moveToFirst();
+            System.out.println(DatabaseUtils.dumpCursorToString(result));
+        }
+        /*FIM DO CODIGO DE TESTE DA DATABASE*/
     }
 
     @Override
