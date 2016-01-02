@@ -23,12 +23,17 @@ import android.widget.Toast;
 import com.example.asus.cardsagainsthumanity.game.CzarPick;
 import com.example.asus.cardsagainsthumanity.game.PlayerPick;
 import com.example.asus.cardsagainsthumanity.game.PlayerWait;
+import com.example.asus.cardsagainsthumanity.game.utils.Game;
 import com.example.asus.cardsagainsthumanity.router.AllEncompasingP2PClient;
 import com.example.asus.cardsagainsthumanity.router.MeshNetworkManager;
 import com.example.asus.cardsagainsthumanity.router.Packet;
 import com.example.asus.cardsagainsthumanity.router.Receiver;
 import com.example.asus.cardsagainsthumanity.router.Sender;
 import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
+
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class RoomActivity extends AppCompatActivity implements ManagerInterface
 {
@@ -114,6 +119,8 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
 
             connect(config);
         }
+
+        Game.responsesID = new ConcurrentLinkedQueue<>();
     }
 
     @Override
@@ -161,7 +168,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         RoomPeersList fragment = (RoomPeersList) getSupportFragmentManager().findFragmentById(R.id.room_peers_list);
         fragment.updateRoomPeers();
 
-        if (MeshNetworkManager.getSelf().isCzar()) //FIXME
+        if (Game.isCzar) //FIXME
         {
             Button b = (Button) findViewById(R.id.button);
             b.setText("Start Game!");

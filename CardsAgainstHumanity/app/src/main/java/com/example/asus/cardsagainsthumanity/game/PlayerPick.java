@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 import com.example.asus.cardsagainsthumanity.game.utils.AnswerArrayAdapter;
+import com.example.asus.cardsagainsthumanity.router.Receiver;
 
 import java.util.ArrayList;
 

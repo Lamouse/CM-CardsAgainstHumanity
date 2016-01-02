@@ -11,7 +11,10 @@ import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.RoomActivity;
 // import com.example.asus.cardsagainsthumanity.RoomPeersList;
 import com.example.asus.cardsagainsthumanity.config.Configuration;
+import com.example.asus.cardsagainsthumanity.game.CzarPick;
 import com.example.asus.cardsagainsthumanity.game.PlayerPick;
+import com.example.asus.cardsagainsthumanity.game.PlayerWait;
+import com.example.asus.cardsagainsthumanity.game.utils.Game;
 import com.example.asus.cardsagainsthumanity.router.tcp.TcpReciever;
 // import com.ecse414.android.echo.ui.DeviceDetailFragment;
 
@@ -114,7 +117,7 @@ public class Receiver implements Runnable {
 				Packet ack = new Packet(Packet.TYPE.HELLO_ACK, rtable, p.getSenderMac(), MeshNetworkManager.getSelf()
 						.getMac());
 				Sender.queuePacket(ack);
-                MeshNetworkManager.getSelf().setIsCzar(true);
+                Game.isCzar = true;
 				somebodyJoined(p.getSenderMac());
 				updatePeerList();
 			}
@@ -134,7 +137,7 @@ public class Receiver implements Runnable {
                     {
 						MeshNetworkManager.deserializeRoutingTableAndAdd(p.getData());
 						MeshNetworkManager.getSelf().setGroupOwnerMac(p.getSenderMac());
-                        MeshNetworkManager.getSelf().setIsCzar(false);
+                        Game.isCzar = false;
 						somebodyJoined(p.getSenderMac());
 						updatePeerList();
 					}
@@ -199,32 +202,42 @@ public class Receiver implements Runnable {
                         String[] separated = data.split(",");
                         if (MeshNetworkManager.getSelf().getMac().equals(data))  // Check if user was delegated to be CZAR
                         {
-                            MeshNetworkManager.getSelf().setIsCzar(true);
+                            Game.isCzar = true;
                             // FIXME: Implement
                         }
                         else
                         {
-                            MeshNetworkManager.getSelf().setIsCzar(false);
+                            Game.isCzar = false;
                             Intent intent = new Intent(activity, PlayerPick.class);
                             intent.putExtra("Question", separated[1]);
                             activity.startActivity(intent);
                         }
                     }
-                    else if (p.getType().equals(Packet.TYPE.WHITECARD) && (("PlayerPick".equals(((ManagerInterface) activity).getActivityName()))
-                            || ("CzarPick".equals(((ManagerInterface) activity).getActivityName()))))
+                    else if (p.getType().equals(Packet.TYPE.WHITECARD))
                     {
-                        if (MeshNetworkManager.getSelf().isCzar())
+                        final String data = new String(p.getData());
+                        if (("PlayerWait".equals(((ManagerInterface) activity).getActivityName())))
                         {
-                            // Append card to list
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((PlayerWait) activity).addPlayerResponse(data);
+                                }
+                            });
                         }
-                        else
+                        else if (("CzarPick".equals(((ManagerInterface) activity).getActivityName())))
                         {
-
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ((CzarPick) activity).addPlayerResponse(data);
+                                }
+                            });
                         }
-                    }
-                    else if (p.getType().equals(Packet.TYPE.BLACKCARD))
-                    {
-
+                        else if (("PlayerPick".equals(((ManagerInterface) activity).getActivityName())))
+                        {
+                            Game.responsesID.add(Integer.parseInt(data));
+                        }
                     }
                     else if (p.getType().equals(Packet.TYPE.FINISH))
                     {

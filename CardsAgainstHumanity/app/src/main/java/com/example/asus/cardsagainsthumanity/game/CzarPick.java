@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 import com.example.asus.cardsagainsthumanity.game.utils.AnswerArrayAdapter;
+import com.example.asus.cardsagainsthumanity.router.Receiver;
 
 import java.util.ArrayList;
 
@@ -20,11 +21,14 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
 {
     private ArrayList<String> playerNames;
     private ArrayList<Integer> playerPoints;
+    private ArrayList<String> answers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_czar_pick);
+
+        Receiver.setActivity(this);
 
         String question;
         if (savedInstanceState == null) {
@@ -55,26 +59,15 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
         playerPoints.add(0);
         playerPoints.add(0);
 
-        final ListView listView = (ListView) findViewById(R.id.answerList);
-        String[] values = new String[] { "Android List View",
-                "Adapter implementation",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };
+        answers = new ArrayList<>();
 
-        final AnswerArrayAdapter adapter = new AnswerArrayAdapter(this, values);
-        listView.setAdapter(adapter);
+        updateList();
+    }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                adapter.itemClicked(position);
-            }
-        });
+    public void addPlayerResponse(String whiteCard)
+    {
+        answers.add(whiteCard);
+        updateList();
     }
 
     public void openScoreTable(View view) {
@@ -96,5 +89,23 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
     @Override
     public void connect(WifiP2pConfig config)
     {
+    }
+
+    private void updateList()
+    {
+        final ListView listView = (ListView) findViewById(R.id.answerList);
+        String[] answersArray = answers.toArray(new String[answers.size()]);
+
+        final AnswerArrayAdapter adapter = new AnswerArrayAdapter(this, answersArray);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                adapter.itemClicked(position);
+            }
+        });
     }
 }

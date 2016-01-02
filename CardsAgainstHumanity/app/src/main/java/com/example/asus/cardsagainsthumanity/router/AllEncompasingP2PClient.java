@@ -35,11 +35,6 @@ public class AllEncompasingP2PClient {
 	 */
 	private boolean isDirectLink;
 
-    /**
-     * Whether player is CZAR or not
-     */
-	private boolean isCzar;
-
 	/**
 	 * Constructor
 	 */
@@ -49,7 +44,6 @@ public class AllEncompasingP2PClient {
 		this.setIp(ip);
 		this.setGroupOwnerMac(groupOwner);
 		this.isDirectLink = true;
-        this.isCzar = false;
 	}
 
 	/**
@@ -138,16 +132,6 @@ public class AllEncompasingP2PClient {
     public boolean isDirectLink()
     {
         return isDirectLink;
-    }
-
-    public boolean isCzar()
-    {
-        return isCzar;
-    }
-
-    public void setIsCzar(boolean isCzar)
-    {
-        this.isCzar = isCzar;
     }
 
     /**
