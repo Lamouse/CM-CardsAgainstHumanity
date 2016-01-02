@@ -17,9 +17,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.asus.cardsagainsthumanity.game.PlayerPick;
+import com.example.asus.cardsagainsthumanity.router.MeshNetworkManager;
 import com.example.asus.cardsagainsthumanity.router.Packet;
 import com.example.asus.cardsagainsthumanity.router.Sender;
 import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
@@ -87,6 +89,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         {
             Log.wtf("Is owner:", "Creating room");
             // isto depois e tratado o WiFiDirectBroadcastReceiver
+            MeshNetworkManager.getSelf().setIsCzar(true);
         }
         else if (userType.equals("Player"))
         {
@@ -107,6 +110,8 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             config.wps.setup = WpsInfo.PBC;
 
             connect(config);
+
+            MeshNetworkManager.getSelf().setIsCzar(true);
         }
     }
 
@@ -131,16 +136,19 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
 
     @Override
     public void connect(WifiP2pConfig config) {
-        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
+        manager.connect(channel, config, new WifiP2pManager.ActionListener()
+        {
 
             @Override
-            public void onSuccess() {
+            public void onSuccess()
+            {
                 // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
                 Toast.makeText(RoomActivity.this, "Connect Successful.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(int reason) {
+            public void onFailure(int reason)
+            {
                 Toast.makeText(RoomActivity.this, "Connect failed. Retry.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -151,6 +159,13 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         Log.d("updatePeersList", "Enter");
         RoomPeersList fragment = (RoomPeersList) getSupportFragmentManager().findFragmentById(R.id.room_peers_list);
         fragment.updateRoomPeers();
+
+        if (MeshNetworkManager.getSelf().isCzar()) //FIXME
+        {
+            Button b = (Button) findViewById(R.id.button);
+            b.setText("Start Game!");
+            b.setOnClickListener();
+        }
     }
 
     private void removeGroup() {
@@ -211,7 +226,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

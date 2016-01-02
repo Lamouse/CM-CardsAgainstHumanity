@@ -13,8 +13,8 @@ public class Packet {
 	 *
 	 */
 	public enum TYPE {
-		HELLO, HELLO_ACK, BYE, MESSAGE, UPDATE
-	};
+		HELLO, HELLO_ACK, BYE, MESSAGE, UPDATE, CZAR, FINISH, WHITECARD, BLACKCARD, WINNER
+	}
 
 	private byte[] data;
 	private Packet.TYPE type;

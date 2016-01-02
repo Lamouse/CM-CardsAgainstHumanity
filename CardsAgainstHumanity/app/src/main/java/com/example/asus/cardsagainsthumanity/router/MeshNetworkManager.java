@@ -146,7 +146,6 @@ public class MeshNetworkManager {
 		}
 
 		return getIPForClient(c);
-
 	}
 
 }

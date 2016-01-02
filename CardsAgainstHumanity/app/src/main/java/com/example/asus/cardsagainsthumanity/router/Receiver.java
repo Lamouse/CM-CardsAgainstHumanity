@@ -60,12 +60,15 @@ public class Receiver implements Runnable {
 		/*
 		 * Keep going through packets
 		 */
-		while (true) {
+		while (true)
+		{
 			/*
 			 * If the queue is empty, sleep to give up CPU cycles
 			 */
-			while (packetQueue.isEmpty()) {
-				try {
+			while (packetQueue.isEmpty())
+			{
+				try
+				{
 					Thread.sleep(125);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -81,11 +84,15 @@ public class Receiver implements Runnable {
 			/*
 			 * If it's a hello, this is special and need to go through the connection mechanism for any node receiving this
 			 */
-			if (p.getType().equals(Packet.TYPE.HELLO)) {
+			if (p.getType().equals(Packet.TYPE.HELLO))
+			{
 				// Put it in your routing table
-				for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values()) {
+				for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
+				{
 					if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()) || c.getMac().equals(p.getSenderMac()))
+					{
 						continue;
+					}
 					Packet update = new Packet(Packet.TYPE.UPDATE, Packet.getMacAsBytes(p.getSenderMac()), c.getMac(),
 							MeshNetworkManager.getSelf().getMac());
 					Sender.queuePacket(update);
@@ -103,20 +110,28 @@ public class Receiver implements Runnable {
 				Sender.queuePacket(ack);
 				somebodyJoined(p.getSenderMac());
 				updatePeerList();
-			} else if (p.getType().equals(Packet.TYPE.BYE)) {
+			}
+            else if (p.getType().equals(Packet.TYPE.BYE))
+            {
 				MeshNetworkManager.routingTable.remove(p.getSenderMac());
 				Receiver.somebodyLeft(p.getSenderMac());
 				Receiver.updatePeerList();
-			} else {
+			}
+            else
+            {
 				// If you're the intended target for a non hello message
-				if (p.getMac().equals(MeshNetworkManager.getSelf().getMac())) {
+				if (p.getMac().equals(MeshNetworkManager.getSelf().getMac()))
+                {
 					//if we get a hello ack populate the table
-					if (p.getType().equals(Packet.TYPE.HELLO_ACK)) {
+					if (p.getType().equals(Packet.TYPE.HELLO_ACK))
+                    {
 						MeshNetworkManager.deserializeRoutingTableAndAdd(p.getData());
 						MeshNetworkManager.getSelf().setGroupOwnerMac(p.getSenderMac());
 						somebodyJoined(p.getSenderMac());
 						updatePeerList();
-					} else if (p.getType().equals(Packet.TYPE.UPDATE)) {
+					}
+                    else if (p.getType().equals(Packet.TYPE.UPDATE))
+                    {
 						//if it's an update, add to the table
 						String emb_mac = Packet.getMacBytesAsString(p.getData(), 0);
 						MeshNetworkManager.routingTable.put(emb_mac,
@@ -137,15 +152,17 @@ public class Receiver implements Runnable {
 							}
 						});*/
 						updatePeerList();
-
-					} else if (p.getType().equals(Packet.TYPE.MESSAGE)) {
+					}
+                    else if (p.getType().equals(Packet.TYPE.MESSAGE))
+                    {
 						//If it's a message display the message and update the table if they're not there 
 						// for whatever reason
 						final String message = p.getSenderMac() + " says:\n" + new String(p.getData());
 						final String msg = new String(p.getData());
 						final String name = p.getSenderMac();
 
-						if (!MeshNetworkManager.routingTable.contains(p.getSenderMac())) {
+						if (!MeshNetworkManager.routingTable.contains(p.getSenderMac()))
+                        {
 							/*
 							 * Update your routing table if for some reason this
 							 * guy isn't in it
@@ -154,7 +171,6 @@ public class Receiver implements Runnable {
 									new AllEncompasingP2PClient(p.getSenderMac(), p.getSenderIP(), p.getSenderMac(),
 											MeshNetworkManager.getSelf().getGroupOwnerMac()));
 						}
-
 						/*activity.runOnUiThread(new Runnable() {
 
 							@Override
@@ -168,12 +184,43 @@ public class Receiver implements Runnable {
 						});*/
 						updatePeerList();
 					}
-				} else {
+                    else if (p.getType().equals(Packet.TYPE.CZAR))
+                    {
+                        String data = new String(p.getData());
+                        if (MeshNetworkManager.getSelf().getMac().equals(data))  // Check if user was delegated to be CZAR
+                        {
+                            MeshNetworkManager.getSelf().setIsCzar(true);
+                        }
+                        else
+                        {
+                            MeshNetworkManager.getSelf().setIsCzar(false);
+                        }
+                    }
+                    else if (p.getType().equals(Packet.TYPE.WHITECARD))
+                    {
+
+                    }
+                    else if (p.getType().equals(Packet.TYPE.BLACKCARD))
+                    {
+
+                    }
+                    else if (p.getType().equals(Packet.TYPE.FINISH))
+                    {
+
+                    }
+                    else if (p.getType().equals(Packet.TYPE.WINNER))
+                    {
+
+                    }
+				}
+                else
+                {
 					// otherwise forward it if you're not the recipient
 					int ttl = p.getTtl();
 					// Have a ttl so that they don't bounce around forever
 					ttl--;
-					if (ttl > 0) {
+					if (ttl > 0)
+                    {
 						Sender.queuePacket(p);
 						p.setTtl(ttl);
 					}
