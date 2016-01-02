@@ -11,5 +11,6 @@ public class Game
 {
     public static boolean isCzar;
     public static int roundNumber;
+    public static int questionID;
     public static ConcurrentLinkedQueue<Integer> responsesID;
 }

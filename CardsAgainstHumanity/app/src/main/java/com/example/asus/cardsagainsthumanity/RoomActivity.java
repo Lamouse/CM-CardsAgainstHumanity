@@ -163,7 +163,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                 {
                     String czarMessage = MeshNetworkManager.getSelf().getMac();
                     czarMessage += ",";
-                    czarMessage += "This is a new question"; // FIXME: Choose a new random question
+                    czarMessage += "77"; // FIXME: Choose a new random question
                     for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
                     {
                         if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()))
@@ -171,8 +171,8 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                         Sender.queuePacket(new Packet(Packet.TYPE.CZAR, czarMessage.getBytes(), c.getMac(),
                                 WifiDirectBroadcastReceiver.MAC));
                     };
+                    Game.questionID = 77;
                     Intent intent = new Intent(RoomActivity.this, CzarPick.class);
-                    intent.putExtra("Question", "This is a new question");
                     startActivity(intent);
                 }
             });

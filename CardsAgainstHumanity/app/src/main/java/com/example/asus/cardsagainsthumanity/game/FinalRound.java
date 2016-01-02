@@ -3,11 +3,14 @@ package com.example.asus.cardsagainsthumanity.game;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 
 import java.util.ArrayList;
+
+import com.example.asus.cardsagainsthumanity.game.utils.Game;
 import com.example.asus.cardsagainsthumanity.router.Receiver;
 
 public class FinalRound extends AppCompatActivity implements ManagerInterface
@@ -21,6 +24,9 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
         setContentView(R.layout.activity_final_round);
 
         Receiver.setActivity(this);
+
+        TextView questionTextView = (TextView) findViewById(R.id.black_card);
+        questionTextView.setText("" + Game.questionID);
 
         playerNames = new ArrayList<String>();
         playerNames.add("Player1");

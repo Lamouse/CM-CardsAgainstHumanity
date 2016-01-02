@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
+import com.example.asus.cardsagainsthumanity.game.utils.Game;
 import com.example.asus.cardsagainsthumanity.router.Receiver;
 import com.example.asus.cardsagainsthumanity.game.utils.ViewAnswerArrayAdapter;
 
@@ -27,20 +28,8 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
 
         Receiver.setActivity(this);
 
-        String question;
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                question = null;
-            } else {
-                question = extras.getString("Question");
-            }
-        } else {
-            question = (String) savedInstanceState.getSerializable("Question");
-        }
-
-        TextView questionTextView = (TextView) findViewById(R.id.blackcard_czar);
-        questionTextView.setText(question);
+        TextView questionTextView = (TextView) findViewById(R.id.black_card);
+        questionTextView.setText(""+ Game.questionID);
 
         playerNames = new ArrayList<String>();
         playerNames.add("Player1");
