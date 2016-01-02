@@ -35,6 +35,7 @@
                     android:textStyle="bold"
                     android:typeface="monospace"
                     android:text="Player2 - 2 pts"
+                    android:onClick="openScoreTable"
                     android:id="@+id/show_dialog_box"/>
 
                 <TextView

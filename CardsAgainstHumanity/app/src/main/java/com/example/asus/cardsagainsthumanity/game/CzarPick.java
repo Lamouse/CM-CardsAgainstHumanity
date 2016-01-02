@@ -55,14 +55,10 @@ public class CzarPick extends AppCompatActivity {
                 adapter.itemClicked(position);
             }
         });
+    }
 
-        Button button = (Button) findViewById(R.id.show_dialog_box);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ScoreTable scoreTable = ScoreTable.newInstance(playerNames, playerPoints);
-                scoreTable.show(getFragmentManager(), "ScoreTableFragment");
-            }
-        });
+    public void openScoreTable(View view) {
+        ScoreTable scoreTable = ScoreTable.newInstance(playerNames, playerPoints);
+        scoreTable.show(getFragmentManager(), "ScoreTableFragment");
     }
 }
