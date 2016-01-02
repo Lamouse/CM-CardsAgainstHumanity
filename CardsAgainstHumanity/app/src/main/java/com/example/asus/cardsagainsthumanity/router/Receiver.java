@@ -1,16 +1,22 @@
 package com.example.asus.cardsagainsthumanity.router;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 // import com.ecse414.android.echo.MessageActivity;
 // import com.ecse414.android.echo.WiFiDirectActivity;
+import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.RoomActivity;
 // import com.example.asus.cardsagainsthumanity.RoomPeersList;
 import com.example.asus.cardsagainsthumanity.config.Configuration;
+import com.example.asus.cardsagainsthumanity.game.PlayerPick;
 import com.example.asus.cardsagainsthumanity.router.tcp.TcpReciever;
 // import com.ecse414.android.echo.ui.DeviceDetailFragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -108,6 +114,7 @@ public class Receiver implements Runnable {
 				Packet ack = new Packet(Packet.TYPE.HELLO_ACK, rtable, p.getSenderMac(), MeshNetworkManager.getSelf()
 						.getMac());
 				Sender.queuePacket(ack);
+                MeshNetworkManager.getSelf().setIsCzar(true);
 				somebodyJoined(p.getSenderMac());
 				updatePeerList();
 			}
@@ -127,6 +134,7 @@ public class Receiver implements Runnable {
                     {
 						MeshNetworkManager.deserializeRoutingTableAndAdd(p.getData());
 						MeshNetworkManager.getSelf().setGroupOwnerMac(p.getSenderMac());
+                        MeshNetworkManager.getSelf().setIsCzar(false);
 						somebodyJoined(p.getSenderMac());
 						updatePeerList();
 					}
@@ -184,9 +192,11 @@ public class Receiver implements Runnable {
 						});*/
 						updatePeerList();
 					}
-                    else if (p.getType().equals(Packet.TYPE.CZAR))
+                    else if (p.getType().equals(Packet.TYPE.CZAR) && ("RoomActivity".equals(((ManagerInterface) activity).getActivityName()) ||
+                            ("FinalRound".equals(((ManagerInterface) activity).getActivityName()))))
                     {
                         String data = new String(p.getData());
+                        List<String> args = Arrays.asList(data.split(","));
                         if (MeshNetworkManager.getSelf().getMac().equals(data))  // Check if user was delegated to be CZAR
                         {
                             MeshNetworkManager.getSelf().setIsCzar(true);
@@ -194,6 +204,9 @@ public class Receiver implements Runnable {
                         else
                         {
                             MeshNetworkManager.getSelf().setIsCzar(false);
+                            Intent intent = new Intent(activity, PlayerPick.class);
+                            intent.putExtra("Question", args.get(1));
+                            activity.startActivity(intent);
                         }
                     }
                     else if (p.getType().equals(Packet.TYPE.WHITECARD))

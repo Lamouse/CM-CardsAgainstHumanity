@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         /*CODIGO DE TESTE DA DATABASE - 10 CARTAS ALEATORIAS, 5 PRETAS E 5 RESPOSTAS*/
-        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+        /*DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         Cursor result;
         for(int i=0;i<10;i++){
             if(i%2==0)
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
                 result = db.getCard("black");
             result.moveToFirst();
             System.out.println(DatabaseUtils.dumpCursorToString(result));
-        }
+        }*/
         /*FIM DO CODIGO DE TESTE DA DATABASE*/
     }
 

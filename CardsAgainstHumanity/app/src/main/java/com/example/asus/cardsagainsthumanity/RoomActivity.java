@@ -20,9 +20,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.asus.cardsagainsthumanity.game.CzarPick;
 import com.example.asus.cardsagainsthumanity.game.PlayerPick;
+import com.example.asus.cardsagainsthumanity.game.PlayerWait;
+import com.example.asus.cardsagainsthumanity.router.AllEncompasingP2PClient;
 import com.example.asus.cardsagainsthumanity.router.MeshNetworkManager;
 import com.example.asus.cardsagainsthumanity.router.Packet;
+import com.example.asus.cardsagainsthumanity.router.Receiver;
 import com.example.asus.cardsagainsthumanity.router.Sender;
 import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
@@ -89,7 +93,6 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         {
             Log.wtf("Is owner:", "Creating room");
             // isto depois e tratado o WiFiDirectBroadcastReceiver
-            MeshNetworkManager.getSelf().setIsCzar(true);
         }
         else if (userType.equals("Player"))
         {
@@ -110,8 +113,6 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             config.wps.setup = WpsInfo.PBC;
 
             connect(config);
-
-            MeshNetworkManager.getSelf().setIsCzar(true);
         }
     }
 
@@ -164,7 +165,33 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         {
             Button b = (Button) findViewById(R.id.button);
             b.setText("Start Game!");
-            b.setOnClickListener();
+            b.setEnabled(true);
+            b.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    String czarMessage = MeshNetworkManager.getSelf().getMac();
+                    czarMessage += ",";
+                    czarMessage += "This is a new question"; // FIXME: Choose a new random question
+                    for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
+                    {
+                        if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()))
+                            continue;
+                        Sender.queuePacket(new Packet(Packet.TYPE.CZAR, czarMessage.getBytes(), c.getMac(),
+                                WifiDirectBroadcastReceiver.MAC));
+                    }
+                    Receiver.setActivity(RoomActivity.this);
+                    Intent intent = new Intent(RoomActivity.this, CzarPick.class);
+                    intent.putExtra("Black Card", "This is a new question");
+                    startActivity(intent);
+                }
+            });
+        }
+        else
+        {
+            Button b = (Button) findViewById(R.id.button);
+            b.setEnabled(false);
         }
     }
 

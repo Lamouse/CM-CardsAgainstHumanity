@@ -1,18 +1,25 @@
 package com.example.asus.cardsagainsthumanity.game;
 
+import android.content.Intent;
+import android.net.wifi.p2p.WifiP2pConfig;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 import com.example.asus.cardsagainsthumanity.game.utils.AnswerArrayAdapter;
 
 import java.util.ArrayList;
 
-public class PlayerPick extends AppCompatActivity {
+public class PlayerPick extends AppCompatActivity implements ManagerInterface
+{
     private ArrayList<String> playerNames;
     private ArrayList<Integer> playerPoints;
 
@@ -20,6 +27,12 @@ public class PlayerPick extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_pick);
+
+        Intent intent = getIntent();
+        String question = intent.getStringExtra("Question");
+
+        TextView questionTextView = (TextView) findViewById(R.id.black_card);
+        questionTextView.setText(question);
 
         playerNames = new ArrayList<String>();
         playerNames.add("Player1");
@@ -64,5 +77,23 @@ public class PlayerPick extends AppCompatActivity {
                 scoreTable.show(getFragmentManager(), "ScoreTableFragment");
             }
         });
+    }
+
+    @Override
+    public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled)
+    {
+
+    }
+
+    @Override
+    public String getActivityName()
+    {
+        return "PlayerPick";
+    }
+
+    @Override
+    public void connect(WifiP2pConfig config)
+    {
+
     }
 }
