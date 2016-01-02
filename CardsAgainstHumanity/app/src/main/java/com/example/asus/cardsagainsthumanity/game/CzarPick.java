@@ -14,6 +14,7 @@ import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 import com.example.asus.cardsagainsthumanity.game.utils.AnswerArrayAdapter;
 import com.example.asus.cardsagainsthumanity.router.Receiver;
+import com.example.asus.cardsagainsthumanity.game.utils.ViewAnswerArrayAdapter;
 
 import java.util.ArrayList;
 
@@ -60,7 +61,6 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
         playerPoints.add(0);
 
         answers = new ArrayList<>();
-
         updateList();
     }
 
@@ -69,7 +69,7 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
         answers.add(whiteCard);
         updateList();
     }
-
+    
     public void openScoreTable(View view) {
         ScoreTable scoreTable = ScoreTable.newInstance(playerNames, playerPoints);
         scoreTable.show(getFragmentManager(), "ScoreTableFragment");

@@ -43,17 +43,12 @@ public class PlayerWait extends AppCompatActivity implements ManagerInterface
         playerPoints.add(0);
 
         answers = new ArrayList<>();
+        updateList();
+    }
 
-        final ListView listView = (ListView) findViewById(R.id.answerList);
-        /*String[] values = new String[] { "Android List View",
-                "Adapter implementation",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };*/
+    public void addPlayerResponse(String whiteCard)
+    {
+        answers.add(whiteCard);
         updateList();
     }
 
@@ -72,13 +67,6 @@ public class PlayerWait extends AppCompatActivity implements ManagerInterface
     @Override
     public void connect(WifiP2pConfig config)
     {
-
-    }
-
-    public void addPlayerResponse(String whiteCard)
-    {
-        answers.add(whiteCard);
-        updateList();
     }
 
     public void openScoreTable(View view) {
