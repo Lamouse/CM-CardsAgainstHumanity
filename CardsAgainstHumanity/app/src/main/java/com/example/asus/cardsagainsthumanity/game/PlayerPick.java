@@ -111,20 +111,24 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
     public void sendAnswer(View view) {
         ArrayList<String> arrayList = adapter.getClickedItens();
 
-        String whiteCardMessage = MeshNetworkManager.getSelf().getMac();
-        whiteCardMessage += ",";
-        // whiteCardMessage += arrayList.get(0);
-        whiteCardMessage += "0";
+        String whiteCardMessage = "0";
         if(arrayList.size() > 1) {
             whiteCardMessage += ",";
             // whiteCardMessage += arrayList.get(1);
             whiteCardMessage += "1";
         }
 
+        Log.wtf("Sending white card: ", " " + whiteCardMessage);
+        Log.wtf("Number of Connections: ", " " + Integer.toString(MeshNetworkManager.routingTable.size()));
+
         for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
         {
             if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()))
+            {
                 Game.responsesID.add(1);
+                continue;
+            }
+            Log.wtf("SENDING WHITE CARD TO: ", " " + c.getMac());
             Sender.queuePacket(new Packet(Packet.TYPE.WHITECARD, whiteCardMessage.getBytes(), c.getMac(),
                     WifiDirectBroadcastReceiver.MAC));
         }

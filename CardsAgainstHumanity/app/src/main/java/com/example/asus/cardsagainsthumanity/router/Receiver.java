@@ -89,7 +89,7 @@ public class Receiver implements Runnable {
 			 */
 			p = packetQueue.remove();
 
-			Log.wtf("PACKET", "RECEIVED");
+			Log.wtf("PACKET RECEIVED", "RECEIVED");
 			/*
 			 * If it's a hello, this is special and need to go through the connection mechanism for any node receiving this
 			 */
@@ -222,6 +222,7 @@ public class Receiver implements Runnable {
                     else if (p.getType().equals(Packet.TYPE.WHITECARD))
                     {
                         final String data = new String(p.getData());
+                        Log.wtf("White Card Received: ", " " + data);
                         if (("PlayerWait".equals(((ManagerInterface) activity).getActivityName())))
                         {
                             activity.runOnUiThread(new Runnable() {
