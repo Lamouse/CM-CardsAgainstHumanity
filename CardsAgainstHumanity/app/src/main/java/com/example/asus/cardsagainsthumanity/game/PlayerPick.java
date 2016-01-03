@@ -31,6 +31,7 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
     private ArrayList<String> playerNames;
     private ArrayList<Integer> playerPoints;
     private AnswerArrayAdapter adapter;
+    private int maxCards = 8;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,9 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
         initializeGame(savedInstanceState);
 
         TextView questionTextView = (TextView) findViewById(R.id.black_card);
-        questionTextView.setText(""+Game.questionID);
+        String[] blackCardText = Game.getBlackCardText(Game.questionID);
+        questionTextView.setText("[" + blackCardText[1] + "] " + blackCardText[0]);
+        //questionTextView.setText("[" + Game.numAnswers + "] " + blackCardText[0]); //does not work
 
         playerNames = new ArrayList<String>();
         playerNames.add("Player1");
@@ -59,7 +62,12 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
         playerPoints.add(0);
 
         final ListView listView = (ListView) findViewById(R.id.answerList);
-        String[] values = new String[] { "Android List View",
+        int[] ids = Game.getWhiteCardId(maxCards);
+        String[] values = new String[maxCards];
+        for(int i=0; i<maxCards; i++){
+            values[i] = Game.getWhiteCardText(ids[i]);
+        }
+        /*String[] values = new String[] { "Android List View",
                 "Adapter implementation",
                 "Simple List View In Android",
                 "Create List View Android",
@@ -67,7 +75,7 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
                 "List View Source Code",
                 "List View Array Adapter",
                 "Android Example List View"
-        };
+        };*/
 
         adapter = new AnswerArrayAdapter(this, values);
         listView.setAdapter(adapter);
@@ -78,7 +86,9 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
                 adapter.itemClicked(position);
 
                 FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-                if(adapter.getClickedItensSize() == 2) {
+                //if(adapter.getClickedItensSize() == 2) { //FIXME tem de ser igual a Game.numAnswers, mas o numero está errado
+                String[] blackCardText = Game.getBlackCardText(Game.questionID);
+                if(adapter.getClickedItensSize() == Integer.parseInt(blackCardText[1])) {
                     fab.setClickable(true);
                 } else {
                     fab.setClickable(false);
@@ -124,12 +134,13 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
         intent.putExtra("Question", Game.questionID);
         intent.putExtra("RoundNumber", Game.roundNumber);
         intent.putExtra("isCzar", Game.isCzar);
+        intent.putExtra("numAnswers", Game.numAnswers);
         startActivity(intent);
         finish();
     }
 
     private void initializeGame(Bundle savedInstanceState) {
-        int question, round;
+        int question, round, numAnswers;
         boolean isCzar;
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -137,18 +148,22 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
                 question = -1;
                 round = -1;
                 isCzar = false;
+                numAnswers = -1;
             } else {
                 question = extras.getInt("Question");
                 round = extras.getInt("RoundNumber");
                 isCzar = extras.getBoolean("isCzar");
+                numAnswers = extras.getInt("numAnswers");
             }
         } else {
             question = (int) savedInstanceState.getSerializable("Question");
             round = (int) savedInstanceState.getSerializable("RoundNumber");
             isCzar = (boolean) savedInstanceState.getSerializable("isCzar");
+            numAnswers = (int) savedInstanceState.getSerializable("numAnswers");
         }
         Game.questionID = question;
         Game.roundNumber = round;
         Game.isCzar = isCzar;
+        Game.numAnswers = numAnswers;
     }
 }

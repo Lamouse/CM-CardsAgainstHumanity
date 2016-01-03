@@ -233,9 +233,11 @@ public class Receiver implements Runnable {
                         }
                         else if (("CzarPick".equals(((ManagerInterface) activity).getActivityName())))
                         {
+							Log.d("PACKET WHITECARD",data);
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+									Log.d("PACKET",data);
                                     ((CzarPick) activity).addPlayerResponse(data);
                                 }
                             });

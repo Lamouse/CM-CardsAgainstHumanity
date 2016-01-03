@@ -127,19 +127,16 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
     }
 
     public void connect(WifiP2pConfig config) {
-        manager.connect(channel, config, new WifiP2pManager.ActionListener()
-        {
+        manager.connect(channel, config, new WifiP2pManager.ActionListener() {
 
             @Override
-            public void onSuccess()
-            {
+            public void onSuccess() {
                 // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
                 Toast.makeText(RoomActivity.this, "Connect Successful.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(int reason)
-            {
+            public void onFailure(int reason) {
                 Toast.makeText(RoomActivity.this, "Connect failed. Retry.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -162,8 +159,9 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                 public void onClick(View v)
                 {
                     String czarMessage = MeshNetworkManager.getSelf().getMac();
+                    int questionId = Game.getBlackCardId();
                     czarMessage += ",";
-                    czarMessage += "77"; // FIXME: Choose a new random question
+                    czarMessage += questionId;
                     for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
                     {
                         if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()))
@@ -171,13 +169,16 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                         Sender.queuePacket(new Packet(Packet.TYPE.CZAR, czarMessage.getBytes(), c.getMac(),
                                 WifiDirectBroadcastReceiver.MAC));
                     };
-                    Game.questionID = 77;
+                    Game.questionID = questionId;
                     Game.roundNumber = 0;
+                    String[] questionText = Game.getBlackCardText(questionId);  //[0] has text, [1] has number of answers
+                    Game.numAnswers = Integer.parseInt(questionText[1]);
                     Intent intent = new Intent(RoomActivity.this, CzarPick.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("Question", Game.questionID);
                     intent.putExtra("RoundNumber", Game.roundNumber);
                     intent.putExtra("isCzar", Game.isCzar);
+                    intent.putExtra("numAnswers", Game.numAnswers);
                     startActivity(intent);
                     finish();
                 }

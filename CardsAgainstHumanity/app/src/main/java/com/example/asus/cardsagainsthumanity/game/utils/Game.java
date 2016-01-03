@@ -17,6 +17,7 @@ public class Game
     public static boolean isCzar;
     public static int roundNumber;
     public static int questionID;
+    public static int numAnswers;
     public static ConcurrentLinkedQueue<Integer> responsesID;
     public static DatabaseHelper db;
 
@@ -30,6 +31,7 @@ public class Game
         Cursor cursor = db.getBlackCard(id);
         cursor.moveToFirst();
         String[] array = new String[2];
+        //System.out.println(DatabaseUtils.dumpCursorToString(cursor));
         array[0] = cursor.getString(1);
         array[1] = cursor.getInt(2)+"";
         return array;
@@ -47,7 +49,7 @@ public class Game
     }
 
     public static int getBlackCardId(){
-        Cursor cursor = db.getWhiteCards(1);
+        Cursor cursor = db.getBlackCards(1);
         cursor.moveToFirst();
         return cursor.getInt(0);
     }
