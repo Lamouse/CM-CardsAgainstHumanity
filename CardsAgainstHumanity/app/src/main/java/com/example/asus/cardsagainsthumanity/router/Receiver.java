@@ -211,12 +211,12 @@ public class Receiver implements Runnable {
 							Game.questionID = Integer.parseInt(separated[1]);
 
 							Intent intent = new Intent(activity, PlayerPick.class);
-							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							intent.putExtra("Question", Game.questionID);
 							intent.putExtra("RoundNumber", Game.roundNumber);
 							intent.putExtra("isCzar", Game.isCzar);
 							activity.startActivity(intent);
-							activity.finish();
+							// activity.finish();
                         }
                     }
                     else if (p.getType().equals(Packet.TYPE.WHITECARD))

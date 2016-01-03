@@ -1,5 +1,6 @@
 package com.example.asus.cardsagainsthumanity.game;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.asus.cardsagainsthumanity.MainActivity;
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 import com.example.asus.cardsagainsthumanity.game.utils.Game;
@@ -114,5 +116,10 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
                 adapter.itemClicked(position);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // User used back and nothing happened
     }
 }

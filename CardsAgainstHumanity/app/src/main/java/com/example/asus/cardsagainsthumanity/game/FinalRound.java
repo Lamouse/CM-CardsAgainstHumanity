@@ -53,4 +53,9 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
         ScoreTable scoreTable = ScoreTable.newInstance(playerNames, playerPoints);
         scoreTable.show(getFragmentManager(), "ScoreTableFragment");
     }
+
+    @Override
+    public void onBackPressed() {
+        // User used back and nothing happened
+    }
 }

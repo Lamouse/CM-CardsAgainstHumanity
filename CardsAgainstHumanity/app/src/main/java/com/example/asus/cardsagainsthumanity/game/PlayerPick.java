@@ -77,7 +77,7 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
                 "Android Example List View"
         };*/
 
-        adapter = new AnswerArrayAdapter(this, values);
+        adapter = new AnswerArrayAdapter(this, values, Integer.parseInt(blackCardText[1]));
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,7 +86,6 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
                 adapter.itemClicked(position);
 
                 FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-                //if(adapter.getClickedItensSize() == 2) { //FIXME tem de ser igual a Game.numAnswers, mas o numero está errado
                 String[] blackCardText = Game.getBlackCardText(Game.questionID);
                 if(adapter.getClickedItensSize() == Integer.parseInt(blackCardText[1])) {
                     fab.setClickable(true);
@@ -114,7 +113,6 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
         String whiteCardMessage = "0";
         if(arrayList.size() > 1) {
             whiteCardMessage += ",";
-            // whiteCardMessage += arrayList.get(1);
             whiteCardMessage += "1";
         }
 
@@ -169,5 +167,10 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
         Game.roundNumber = round;
         Game.isCzar = isCzar;
         Game.numAnswers = numAnswers;
+    }
+
+    @Override
+    public void onBackPressed() {
+        // User used back and nothing happened
     }
 }

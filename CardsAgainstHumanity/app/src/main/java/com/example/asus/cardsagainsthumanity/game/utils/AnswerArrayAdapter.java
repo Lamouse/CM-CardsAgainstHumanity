@@ -15,11 +15,13 @@ public class AnswerArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final String[] values;
     private ArrayList<Integer> clickedItens = new ArrayList<Integer>();
+    private int maxTam;
 
-    public AnswerArrayAdapter(Context context, String[] values) {
+    public AnswerArrayAdapter(Context context, String[] values, int maxTam) {
         super(context, R.layout.content_answers, values);
         this.context = context;
         this.values = values;
+        this.maxTam = maxTam;
     }
 
     @Override
@@ -49,8 +51,8 @@ public class AnswerArrayAdapter extends ArrayAdapter<String> {
         if(clickedItens.contains(position))
             clickedItens.remove(clickedItens.indexOf(position));
         else{
-            if(clickedItens.size()>1)
-                clickedItens.remove(1);
+            if(clickedItens.size()>maxTam-1)
+                clickedItens.remove(maxTam-1);
 
             clickedItens.add(position);
         }

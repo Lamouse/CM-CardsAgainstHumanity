@@ -174,13 +174,13 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                     String[] questionText = Game.getBlackCardText(questionId);  //[0] has text, [1] has number of answers
                     Game.numAnswers = Integer.parseInt(questionText[1]);
                     Intent intent = new Intent(RoomActivity.this, CzarPick.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("Question", Game.questionID);
                     intent.putExtra("RoundNumber", Game.roundNumber);
                     intent.putExtra("isCzar", Game.isCzar);
                     intent.putExtra("numAnswers", Game.numAnswers);
                     startActivity(intent);
-                    finish();
+                    // finish();
                 }
             });
         }

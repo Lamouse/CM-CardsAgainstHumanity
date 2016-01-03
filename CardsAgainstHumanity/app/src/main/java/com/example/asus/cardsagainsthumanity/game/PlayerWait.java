@@ -113,4 +113,9 @@ public class PlayerWait extends AppCompatActivity implements ManagerInterface
         Game.isCzar = isCzar;
         Game.numAnswers = numAnswers;
     }
+
+    @Override
+    public void onBackPressed() {
+        // User used back and nothing happened
+    }
 }
