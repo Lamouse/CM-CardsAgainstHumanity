@@ -50,6 +50,13 @@ public class PlayerWait extends AppCompatActivity implements ManagerInterface
         playerPoints.add(0);
 
         answers = new ArrayList<>();
+
+        for (Integer c : Game.responsesID)
+        {
+            answers.add(Integer.toString(c)); // FIXME: Get card from database
+        }
+        Game.responsesID.clear();
+
         updateList();
     }
 
