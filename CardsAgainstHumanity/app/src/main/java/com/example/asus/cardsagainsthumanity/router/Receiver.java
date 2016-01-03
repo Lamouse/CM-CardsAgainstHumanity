@@ -14,6 +14,7 @@ import com.example.asus.cardsagainsthumanity.RoomActivity;
 // import com.example.asus.cardsagainsthumanity.RoomPeersList;
 import com.example.asus.cardsagainsthumanity.config.Configuration;
 import com.example.asus.cardsagainsthumanity.game.CzarPick;
+import com.example.asus.cardsagainsthumanity.game.FinalRound;
 import com.example.asus.cardsagainsthumanity.game.PlayerPick;
 import com.example.asus.cardsagainsthumanity.game.PlayerWait;
 import com.example.asus.cardsagainsthumanity.game.utils.Game;
@@ -231,6 +232,7 @@ public class Receiver implements Runnable {
                     else if (p.getType().equals(Packet.TYPE.WHITECARD))
                     {
                         final String data = new String(p.getData());
+                        final String senderMacAddress = p.getSenderMac();
                         Log.wtf("White Card Received: ", " " + data);
                         if (("PlayerWait".equals(((ManagerInterface) activity).getActivityName())))
                         {
@@ -248,7 +250,7 @@ public class Receiver implements Runnable {
                                 @Override
                                 public void run() {
 									Log.d("PACKET",data);
-                                    ((CzarPick) activity).addPlayerResponse(data);
+                                    ((CzarPick) activity).addPlayerResponse(data, senderMacAddress);
                                 }
                             });
                         }
@@ -261,9 +263,16 @@ public class Receiver implements Runnable {
                     {
 
                     }
-                    else if (p.getType().equals(Packet.TYPE.WINNER))
+                    else if (p.getType().equals(Packet.TYPE.WINNER) && (("PlayerWait".equals(((ManagerInterface) activity).getActivityName()))))
                     {
+                        String data = new String(p.getData());
+                        String[] separated = data.split(";");
 
+                        Intent intent = new Intent(activity, FinalRound.class);
+                        intent.putExtra("winnerMac", separated[0]);
+                        intent.putExtra("winnerCardsID", separated[1]);
+                        activity.startActivity(intent);
+                        //FIXME: É preciso dara finish()???????
                     }
 				}
                 else

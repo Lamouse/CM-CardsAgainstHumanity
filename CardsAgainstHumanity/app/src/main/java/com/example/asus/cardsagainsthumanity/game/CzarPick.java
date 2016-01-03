@@ -3,6 +3,7 @@ package com.example.asus.cardsagainsthumanity.game;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -13,8 +14,13 @@ import com.example.asus.cardsagainsthumanity.MainActivity;
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 import com.example.asus.cardsagainsthumanity.game.utils.Game;
+import com.example.asus.cardsagainsthumanity.router.AllEncompasingP2PClient;
+import com.example.asus.cardsagainsthumanity.router.MeshNetworkManager;
+import com.example.asus.cardsagainsthumanity.router.Packet;
 import com.example.asus.cardsagainsthumanity.router.Receiver;
 import com.example.asus.cardsagainsthumanity.game.utils.ViewAnswerArrayAdapter;
+import com.example.asus.cardsagainsthumanity.router.Sender;
+import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
 import java.util.ArrayList;
 
@@ -23,6 +29,7 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
     private ArrayList<String> playerNames;
     private ArrayList<Integer> playerPoints;
     private ArrayList<String> answers;
+    private ArrayList<String> answersMacAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,7 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
         playerPoints = new ArrayList<Integer>(Game.scoreTable.values());
 
         answers = new ArrayList<>();
+        answersMacAddress = new ArrayList<>();
         updateList();
     }
 
@@ -78,15 +86,45 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
         Game.numAnswers = numAnswers;
     }
 
-    public void addPlayerResponse(String whiteCard)
+    public void addPlayerResponse(String whiteCard, String senderMacAddress)
     {
         answers.add(whiteCard);
+        answersMacAddress.add(senderMacAddress);
         updateList();
     }
     
     public void openScoreTable(View view) {
         ScoreTable scoreTable = ScoreTable.newInstance(playerNames, playerPoints);
         scoreTable.show(getFragmentManager(), "ScoreTableFragment");
+    }
+
+    public void vote(View view)
+    {
+        if (answers.size() == (MeshNetworkManager.routingTable.size() - 1))
+        {
+            int winnerIndex = 0; // FIXME: Get from list view
+            String winnerAnswer = answersMacAddress.get(winnerIndex);
+            winnerAnswer += ";";
+            winnerAnswer += answers.get(winnerIndex);
+
+            for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
+            {
+                if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()))
+                {
+                    continue;
+                }
+                Log.wtf("SENDING WHITE CARD TO: ", " " + c.getMac());
+                Sender.queuePacket(new Packet(Packet.TYPE.WINNER, winnerAnswer.getBytes(), c.getMac(),
+                        WifiDirectBroadcastReceiver.MAC));
+            }
+
+            Intent intent = new Intent(CzarPick.this, FinalRound.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("winnerMac", answersMacAddress.get(winnerIndex));
+            intent.putExtra("winnerCardsID", answers.get(winnerIndex));
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
