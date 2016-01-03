@@ -208,9 +208,15 @@ public class Receiver implements Runnable {
                         else
                         {
                             Game.isCzar = false;
-                            Intent intent = new Intent(activity, PlayerPick.class);
-                            intent.putExtra("Question", separated[1]);
-                            activity.startActivity(intent);
+							Game.questionID = Integer.parseInt(separated[1]);
+
+							Intent intent = new Intent(activity, PlayerPick.class);
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							intent.putExtra("Question", Game.questionID);
+							intent.putExtra("RoundNumber", Game.roundNumber);
+							intent.putExtra("isCzar", Game.isCzar);
+							activity.startActivity(intent);
+							activity.finish();
                         }
                     }
                     else if (p.getType().equals(Packet.TYPE.WHITECARD))
@@ -321,7 +327,8 @@ public class Receiver implements Runnable {
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				((RoomActivity) activity).updatePeersList();
+				if( "RoomActivity".equals(((ManagerInterface) activity).getActivityName()))
+					((RoomActivity) activity).updatePeersList();
 			}
 		});
 	}

@@ -28,6 +28,8 @@ public class PlayerWait extends AppCompatActivity implements ManagerInterface
 
         Receiver.setActivity(this);
 
+        initializeGame(savedInstanceState);
+
         TextView questionTextView = (TextView) findViewById(R.id.black_card);
         questionTextView.setText("" + Game.questionID);
 
@@ -74,13 +76,35 @@ public class PlayerWait extends AppCompatActivity implements ManagerInterface
         final ViewAnswerArrayAdapter adapter = new ViewAnswerArrayAdapter(this, answersArray, answersArray);
         listView.setAdapter(adapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 adapter.itemClicked(position);
             }
         });
+    }
+
+    private void initializeGame(Bundle savedInstanceState) {
+        int question, round;
+        boolean isCzar;
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                question = -1;
+                round = -1;
+                isCzar = false;
+            } else {
+                question = extras.getInt("Question");
+                round = extras.getInt("RoundNumber");
+                isCzar = extras.getBoolean("isCzar");
+            }
+        } else {
+            question = (int) savedInstanceState.getSerializable("Question");
+            round = (int) savedInstanceState.getSerializable("RoundNumber");
+            isCzar = (boolean) savedInstanceState.getSerializable("isCzar");
+        }
+        Game.questionID = question;
+        Game.roundNumber = round;
+        Game.isCzar = isCzar;
     }
 }

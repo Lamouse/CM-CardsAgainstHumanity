@@ -39,6 +39,8 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
 
         Receiver.setActivity(this);
 
+        initializeGame(savedInstanceState);
+
         TextView questionTextView = (TextView) findViewById(R.id.black_card);
         questionTextView.setText(""+Game.questionID);
 
@@ -118,6 +120,35 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
         }
 
         Intent intent = new Intent(PlayerPick.this, PlayerWait.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("Question", Game.questionID);
+        intent.putExtra("RoundNumber", Game.roundNumber);
+        intent.putExtra("isCzar", Game.isCzar);
         startActivity(intent);
+        finish();
+    }
+
+    private void initializeGame(Bundle savedInstanceState) {
+        int question, round;
+        boolean isCzar;
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                question = -1;
+                round = -1;
+                isCzar = false;
+            } else {
+                question = extras.getInt("Question");
+                round = extras.getInt("RoundNumber");
+                isCzar = extras.getBoolean("isCzar");
+            }
+        } else {
+            question = (int) savedInstanceState.getSerializable("Question");
+            round = (int) savedInstanceState.getSerializable("RoundNumber");
+            isCzar = (boolean) savedInstanceState.getSerializable("isCzar");
+        }
+        Game.questionID = question;
+        Game.roundNumber = round;
+        Game.isCzar = isCzar;
     }
 }

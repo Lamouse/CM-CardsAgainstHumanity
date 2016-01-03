@@ -172,8 +172,14 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                                 WifiDirectBroadcastReceiver.MAC));
                     };
                     Game.questionID = 77;
+                    Game.roundNumber = 0;
                     Intent intent = new Intent(RoomActivity.this, CzarPick.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("Question", Game.questionID);
+                    intent.putExtra("RoundNumber", Game.roundNumber);
+                    intent.putExtra("isCzar", Game.isCzar);
                     startActivity(intent);
+                    finish();
                 }
             });
         }
