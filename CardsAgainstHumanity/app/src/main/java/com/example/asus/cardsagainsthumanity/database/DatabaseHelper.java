@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -74,22 +75,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             db.setTransactionSuccessful();
         } catch (Exception e){
-            System.out.println("DEU MERDA A IMPORTAR AS CARTAS");
             e.printStackTrace();
         } finally {
             db.endTransaction();
-            System.out.println("IMPORTEI AS CARTAS!");
         }
+        Log.d("Database","Repopulated the database");
     }
 
-    public Cursor getCard(String type){
+    public Cursor getWhiteCards(int num){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res;
-        if(type.equals("white")){
-            res = db.rawQuery( "select * from "+TABLE1+" ORDER BY RANDOM() LIMIT 1", null );
-        }else{
-            res = db.rawQuery( "select * from "+TABLE2+" ORDER BY RANDOM() LIMIT 1", null );
-        }
+        res = db.rawQuery( "SELECT * FROM "+TABLE1+" ORDER BY RANDOM() LIMIT "+num, null );
+        return res;
+    }
+
+    public Cursor getBlackCards(int num){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res;
+        res = db.rawQuery( "SELECT * FROM "+TABLE2+" ORDER BY RANDOM() LIMIT "+num, null );
+        return res;
+    }
+
+    public Cursor getWhiteCard(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res;
+        res = db.rawQuery( "SELECT * FROM "+TABLE1+" WHERE "+ ID +"="+id, null );
+        return res;
+    }
+
+    public Cursor getBlackCard(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res;
+        res = db.rawQuery( "SELECT * FROM "+TABLE2+" WHERE "+ ID +"="+id, null );
         return res;
     }
 
