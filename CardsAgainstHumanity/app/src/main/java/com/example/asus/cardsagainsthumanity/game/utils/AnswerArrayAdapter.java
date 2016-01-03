@@ -42,7 +42,7 @@ public class AnswerArrayAdapter extends ArrayAdapter<String> {
             rowView = inflater.inflate(R.layout.content_answers, parent, false);
 
         TextView textView = (TextView) rowView.findViewById(R.id.text1);
-        textView.setText(values[position]);
+        textView.setText(Game.getWhiteCardText(Integer.parseInt(values[position])));
 
         return rowView;
     }
@@ -66,11 +66,9 @@ public class AnswerArrayAdapter extends ArrayAdapter<String> {
 
     public ArrayList<String> getClickedItens() {
         ArrayList<String> result = new ArrayList<>();
-
         for(int i : clickedItens) {
             result.add(values[i]);
         }
-
         return result;
     }
 }

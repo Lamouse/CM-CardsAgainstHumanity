@@ -28,7 +28,7 @@ public class Game
     public static int questionID;
     public static int numAnswers;
     public static Map<String, Integer> scoreTable;
-    public static ConcurrentLinkedQueue<Integer> responsesID;
+    public static ConcurrentLinkedQueue<ArrayList<Integer>> responsesID;
     public static DatabaseHelper db;
 
     public static String getWhiteCardText(int id){

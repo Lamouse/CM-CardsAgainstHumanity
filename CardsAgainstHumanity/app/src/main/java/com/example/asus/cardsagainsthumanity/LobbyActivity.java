@@ -96,13 +96,12 @@ public class LobbyActivity extends AppCompatActivity implements ManagerInterface
         manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Toast.makeText(LobbyActivity.this, "Discovery Initiated", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(LobbyActivity.this, "Discovery Initiated", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int reasonCode) {
-                Toast.makeText(LobbyActivity.this, "Discovery Failed : " + reasonCode, Toast.LENGTH_SHORT)
-                        .show();
+                // Toast.makeText(LobbyActivity.this, "Discovery Failed : " + reasonCode, Toast.LENGTH_SHORT).show();
             }
         });
     }

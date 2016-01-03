@@ -37,11 +37,11 @@ public class ViewAnswerArrayAdapter extends ArrayAdapter<String> {
             rowView = inflater.inflate(R.layout.content_view_answers, parent, false);
         }
         TextView textView = (TextView) rowView.findViewById(R.id.text1);
-        textView.setText(answers1[position]);
+        textView.setText(Game.getWhiteCardText(Integer.parseInt(answers1[position])));
 
         TextView textView2 = (TextView) rowView.findViewById(R.id.text2);
         if(answers2 != null) {
-            textView2.setText(answers2[position]);
+            textView2.setText(Game.getWhiteCardText(Integer.parseInt(answers2[position])));
         }
         else {
             textView2.setVisibility(View.GONE);
@@ -51,7 +51,15 @@ public class ViewAnswerArrayAdapter extends ArrayAdapter<String> {
     }
 
     public void itemClicked(int position) {
-        clickedItem = position;
+        if(clickedItem == position)
+            clickedItem = -1;
+        else {
+            clickedItem = position;
+        }
         notifyDataSetChanged();
+    }
+
+    public int getClickedItem() {
+        return clickedItem;
     }
 }

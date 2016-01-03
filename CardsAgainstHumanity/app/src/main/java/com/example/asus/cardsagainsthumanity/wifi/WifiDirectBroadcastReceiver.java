@@ -100,7 +100,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
                                 @Override
                                 public void onFailure(int reason) {
                                     Log.d("createGroup", "P2P Group failed");
-                                    Toast.makeText(activity, "P2P Group failed", Toast.LENGTH_LONG).show();
+                                    // Toast.makeText(activity, "P2P Group failed", Toast.LENGTH_LONG).show();
 
                                     Intent intent = new Intent(activity, MainActivity.class);
                                     activity.startActivity(intent);
@@ -134,10 +134,20 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
                 NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
                 if (networkInfo.isConnected()) {
                     //Launch receiver and sender once connected to someone
+                    if (!Receiver.running) {
+                        // Toast.makeText(activity, "RUNNINGCREATE", Toast.LENGTH_LONG).show();
+
+                        new Thread(new Receiver(this.activity)).start();
+                        new Thread(new Sender()).start();
+                    }
+                    else {
+                        Receiver.setActivity(this.activity);
+                    }
+                    //Launch receiver and sender once connected to someone
                     ((RoomActivity) activity).sendFirstPacket();
                 }
                 else{
-                    Toast.makeText(activity, "Connection Recused", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(activity, "Connection Recused", Toast.LENGTH_LONG).show();
 
                     /*Intent intent1 = new Intent(activity, MainActivity.class);
                     activity.startActivity(intent);
@@ -148,7 +158,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
         {
             if ("RoomActivity".equals(((ManagerInterface) activity).getActivityName()))
             {
-                Toast.makeText(activity, "WIFI_P2P_THIS_DEVICE_CHANGED_ACTION", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(activity, "WIFI_P2P_THIS_DEVICE_CHANGED_ACTION", Toast.LENGTH_SHORT).show();
 
                 MAC = ((WifiP2pDevice) intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)).deviceAddress;
 
@@ -160,7 +170,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver
 
                 //Launch receiver and sender once connected to someone
                 if (!Receiver.running) {
-                    Toast.makeText(activity, "RUNNINGCREATE", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(activity, "RUNNINGCREATE", Toast.LENGTH_LONG).show();
 
                     new Thread(new Receiver(this.activity)).start();
                     new Thread(new Sender()).start();

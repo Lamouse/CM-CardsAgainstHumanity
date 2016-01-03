@@ -42,11 +42,6 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
 
         // initializeGame(savedInstanceState);
 
-        Log.wtf("GameDevice", Game.deviceName);
-        Log.wtf("GameDevice", ""+Game.scoreTable.containsKey(Game.deviceName));
-        Log.wtf("GameDevice", ""+Game.scoreTable.get(Game.deviceName));
-        Log.wtf("GameDevice", ""+Game.scoreTable);
-
         Button button = (Button) findViewById(R.id.show_dialog_box);
         button.setText(Game.deviceName + " - " + Game.scoreTable.get(Game.deviceName) + " pts");
 
@@ -56,31 +51,19 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
         TextView questionTextView = (TextView) findViewById(R.id.black_card);
         String[] blackCardText = Game.getBlackCardText(Game.questionID);
         questionTextView.setText("[" + blackCardText[1] + "] " + blackCardText[0]);
-        //questionTextView.setText("[" + Game.numAnswers + "] " + blackCardText[0]); //does not work
+        Game.numAnswers = Integer.parseInt(blackCardText[1]);
 
         playerNames = new ArrayList<String>(Game.scoreTable.keySet());
-        playerPoints = new ArrayList<Integer>();
-        for(String tempString : playerNames) {
-            playerPoints.add(Game.scoreTable.get(tempString));
-        }
+        playerPoints = new ArrayList<Integer>(Game.scoreTable.values());
 
         final ListView listView = (ListView) findViewById(R.id.answerList);
         int[] ids = Game.getWhiteCardId(maxCards);
         String[] values = new String[maxCards];
         for(int i=0; i<maxCards; i++){
-            values[i] = Game.getWhiteCardText(ids[i]);
+            values[i] = Integer.toString(ids[i]);
         }
-        /*String[] values = new String[] { "Android List View",
-                "Adapter implementation",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };*/
 
-        adapter = new AnswerArrayAdapter(this, values, Integer.parseInt(blackCardText[1]));
+        adapter = new AnswerArrayAdapter(this, values, Game.numAnswers);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,8 +72,7 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
                 adapter.itemClicked(position);
 
                 FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-                String[] blackCardText = Game.getBlackCardText(Game.questionID);
-                if(adapter.getClickedItensSize() == Integer.parseInt(blackCardText[1])) {
+                if(adapter.getClickedItensSize() == Game.numAnswers) {
                     fab.setClickable(true);
                 } else {
                     fab.setClickable(false);
@@ -113,20 +95,20 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
     public void sendAnswer(View view) {
         ArrayList<String> arrayList = adapter.getClickedItens();
 
-        String whiteCardMessage = "0";
+        ArrayList<Integer> answers = new ArrayList<>();
+        String whiteCardMessage = arrayList.get(0);
+        answers.add(Integer.parseInt(arrayList.get(0)));
         if(arrayList.size() > 1) {
             whiteCardMessage += ",";
-            whiteCardMessage += "1";
+            whiteCardMessage += arrayList.get(1);
+            answers.add(Integer.parseInt(arrayList.get(1)));
         }
-
-        Log.wtf("Sending white card: ", " " + whiteCardMessage);
-        Log.wtf("Number of Connections: ", " " + Integer.toString(MeshNetworkManager.routingTable.size()));
 
         for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
         {
             if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()))
             {
-                Game.responsesID.add(1);
+                Game.responsesID.add(answers);
                 continue;
             }
             Log.wtf("SENDING WHITE CARD TO: ", " " + c.getMac());

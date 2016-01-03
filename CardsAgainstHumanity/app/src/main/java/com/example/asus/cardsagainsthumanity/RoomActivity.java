@@ -134,12 +134,12 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             @Override
             public void onSuccess() {
                 // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
-                Toast.makeText(RoomActivity.this, "Connect Successful.", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(RoomActivity.this, "Connect Successful.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int reason) {
-                Toast.makeText(RoomActivity.this, "Connect failed. Retry.", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(RoomActivity.this, "Connect failed. Retry.", Toast.LENGTH_SHORT).show();
             }
         });
     }

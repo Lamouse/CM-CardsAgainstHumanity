@@ -1,6 +1,7 @@
 package com.example.asus.cardsagainsthumanity.game;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +29,8 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
 {
     private ArrayList<String> playerNames;
     private ArrayList<Integer> playerPoints;
-    private ArrayList<String> answers;
+    private ArrayList<String> answers1;
+    private ArrayList<String> answers2;
     private ArrayList<String> answersMacAddress;
 
     @Override
@@ -53,7 +55,9 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
         playerNames = new ArrayList<String>(Game.scoreTable.keySet());
         playerPoints = new ArrayList<Integer>(Game.scoreTable.values());
 
-        answers = new ArrayList<>();
+        answers1 = new ArrayList<>();
+        answers2 = new ArrayList<>();
+
         answersMacAddress = new ArrayList<>();
         updateList();
     }
@@ -88,7 +92,12 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
 
     public void addPlayerResponse(String whiteCard, String senderMacAddress)
     {
-        answers.add(whiteCard);
+        if(Game.numAnswers > 1) {
+            String[] splitWhiteCard = whiteCard.split(",");
+            answers1.add(splitWhiteCard[0]);
+            answers2.add(splitWhiteCard[1]);
+        } else
+            answers1.add(whiteCard);
         answersMacAddress.add(senderMacAddress);
         updateList();
     }
@@ -100,31 +109,28 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
 
     public void vote(View view)
     {
-        if (answers.size() == (MeshNetworkManager.routingTable.size() - 1))
+        int winnerIndex = 0; // FIXME: Get from list view
+        String winnerAnswer = answersMacAddress.get(winnerIndex);
+        winnerAnswer += ";";
+        winnerAnswer += answers1.get(winnerIndex);
+
+        for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
         {
-            int winnerIndex = 0; // FIXME: Get from list view
-            String winnerAnswer = answersMacAddress.get(winnerIndex);
-            winnerAnswer += ";";
-            winnerAnswer += answers.get(winnerIndex);
-
-            for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
+            if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()))
             {
-                if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()))
-                {
-                    continue;
-                }
-                Log.wtf("SENDING WHITE CARD TO: ", " " + c.getMac());
-                Sender.queuePacket(new Packet(Packet.TYPE.WINNER, winnerAnswer.getBytes(), c.getMac(),
-                        WifiDirectBroadcastReceiver.MAC));
+                continue;
             }
-
-            Intent intent = new Intent(CzarPick.this, FinalRound.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("winnerMac", answersMacAddress.get(winnerIndex));
-            intent.putExtra("winnerCardsID", answers.get(winnerIndex));
-            startActivity(intent);
-            finish();
+            Log.wtf("SENDING WHITE CARD TO: ", " " + c.getMac());
+            Sender.queuePacket(new Packet(Packet.TYPE.WINNER, winnerAnswer.getBytes(), c.getMac(),
+                    WifiDirectBroadcastReceiver.MAC));
         }
+
+        Intent intent = new Intent(CzarPick.this, FinalRound.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("winnerMac", answersMacAddress.get(winnerIndex));
+        intent.putExtra("winnerCardsID", answers1.get(winnerIndex));
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -136,9 +142,14 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
     private void updateList()
     {
         final ListView listView = (ListView) findViewById(R.id.answerList);
-        String[] answersArray = answers.toArray(new String[answers.size()]);
+        String[] answersArray1 = answers1.toArray(new String[answers1.size()]);
+        String[] answersArray2;
+        if(Game.numAnswers > 1)
+            answersArray2 = answers2.toArray(new String[answers2.size()]);
+        else
+            answersArray2 = null;
 
-        final ViewAnswerArrayAdapter adapter = new ViewAnswerArrayAdapter(this, answersArray, answersArray);
+        final ViewAnswerArrayAdapter adapter = new ViewAnswerArrayAdapter(this, answersArray1, answersArray2);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -147,6 +158,13 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
                 adapter.itemClicked(position);
+
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                if(adapter.getClickedItem() != -1) {
+                    fab.setClickable(true);
+                } else {
+                    fab.setClickable(false);
+                }
             }
         });
     }

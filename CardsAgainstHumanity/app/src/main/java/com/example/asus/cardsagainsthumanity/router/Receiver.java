@@ -229,36 +229,35 @@ public class Receiver implements Runnable {
 							// activity.finish();
                         }
                     }
-                    else if (p.getType().equals(Packet.TYPE.WHITECARD))
-                    {
-                        final String data = new String(p.getData());
-                        final String senderMacAddress = p.getSenderMac();
-                        Log.wtf("White Card Received: ", " " + data);
-                        if (("PlayerWait".equals(((ManagerInterface) activity).getActivityName())))
-                        {
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ((PlayerWait) activity).addPlayerResponse(data);
-                                }
-                            });
-                        }
-                        else if (("CzarPick".equals(((ManagerInterface) activity).getActivityName())))
-                        {
-							Log.d("PACKET WHITECARD",data);
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-									Log.d("PACKET",data);
-                                    ((CzarPick) activity).addPlayerResponse(data, senderMacAddress);
-                                }
-                            });
-                        }
-                        else if (("PlayerPick".equals(((ManagerInterface) activity).getActivityName())))
-                        {
-                            Game.responsesID.add(Integer.parseInt(data));
-                        }
-                    }
+                    else if (p.getType().equals(Packet.TYPE.WHITECARD)) {
+						final String data = new String(p.getData());
+						final String senderMacAddress = p.getSenderMac();
+						Log.wtf("White Card Received: ", " " + data);
+						if (("PlayerWait".equals(((ManagerInterface) activity).getActivityName()))) {
+							activity.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									((PlayerWait) activity).addPlayerResponse(data);
+								}
+							});
+						} else if (("CzarPick".equals(((ManagerInterface) activity).getActivityName()))) {
+							Log.d("PACKET WHITECARD", data);
+							activity.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									Log.d("PACKET", data);
+									((CzarPick) activity).addPlayerResponse(data, senderMacAddress);
+								}
+							});
+						} else if (("PlayerPick".equals(((ManagerInterface) activity).getActivityName()))) {
+							ArrayList<Integer> arrayList = new ArrayList<>();
+							String[] parseData = data.split(",");
+							for (String tempString : parseData) {
+								arrayList.add(Integer.parseInt(tempString));
+							}
+							Game.responsesID.add(arrayList);
+						}
+					}
                     else if (p.getType().equals(Packet.TYPE.FINISH))
                     {
 
