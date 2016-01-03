@@ -17,9 +17,10 @@ import android.widget.Toast;
 
 import com.example.asus.cardsagainsthumanity.database.DatabaseHelper;
 import com.example.asus.cardsagainsthumanity.game.utils.Game;
+import com.example.asus.cardsagainsthumanity.router.Receiver;
 
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements ManagerInterface
 {
     private DatabaseHelper db=null;
     private Cursor cursor=null;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Receiver.setActivity(this);
         startDatabase();
     }
 
@@ -126,5 +128,10 @@ public class MainActivity extends AppCompatActivity
         db.close();
 
         super.onDestroy();
+    }
+
+    @Override
+    public String getActivityName() {
+        return "MainActivity";
     }
 }
