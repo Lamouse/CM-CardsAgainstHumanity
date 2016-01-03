@@ -2,7 +2,9 @@ package com.example.asus.cardsagainsthumanity.router;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 // import com.ecse414.android.echo.MessageActivity;
@@ -209,6 +211,13 @@ public class Receiver implements Runnable {
                         {
                             Game.isCzar = false;
 							Game.questionID = Integer.parseInt(separated[1]);
+							Game.roundNumber = 0;
+							TreeMap<String, Integer> hashResults = new TreeMap<String, Integer>();
+							for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values()) {
+								hashResults.put(c.getMac(), 0);
+							}
+							Game.scoreTable = Game.sortByValue(hashResults);
+							Game.deviceName = MeshNetworkManager.getSelf().getMac();
 
 							Intent intent = new Intent(activity, PlayerPick.class);
 							// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

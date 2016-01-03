@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,26 +29,21 @@ public class PlayerWait extends AppCompatActivity implements ManagerInterface
 
         Receiver.setActivity(this);
 
-        initializeGame(savedInstanceState);
+        // initializeGame(savedInstanceState);
+
+        Button button = (Button) findViewById(R.id.show_dialog_box);
+        button.setText(Game.deviceName + " - " + Game.scoreTable.get(Game.deviceName) + " pts");
+
+        TextView textView = (TextView) findViewById(R.id.textRound);
+        textView.setText("Round "+Game.roundNumber);
 
         TextView questionTextView = (TextView) findViewById(R.id.black_card);
         String[] blackCardText = Game.getBlackCardText(Game.questionID);
         questionTextView.setText("[" + blackCardText[1] + "] " + blackCardText[0]);
         //questionTextView.setText("[" + Game.numAnswers + "] " + blackCardText[0]); //does not work
 
-        playerNames = new ArrayList<String>();
-        playerNames.add("Player1");
-        playerNames.add("Player2");
-        playerNames.add("Player4");
-        playerNames.add("Player3");
-        playerNames.add("Player5");
-
-        playerPoints = new ArrayList<Integer>();
-        playerPoints.add(3);
-        playerPoints.add(2);
-        playerPoints.add(1);
-        playerPoints.add(0);
-        playerPoints.add(0);
+        playerNames = new ArrayList<String>(Game.scoreTable.keySet());
+        playerPoints = new ArrayList<Integer>(Game.scoreTable.values());
 
         answers = new ArrayList<>();
 

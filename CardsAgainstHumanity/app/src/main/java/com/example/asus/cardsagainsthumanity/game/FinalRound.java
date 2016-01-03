@@ -3,6 +3,7 @@ package com.example.asus.cardsagainsthumanity.game;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.asus.cardsagainsthumanity.ManagerInterface;
@@ -25,22 +26,17 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
 
         Receiver.setActivity(this);
 
+        Button button = (Button) findViewById(R.id.show_dialog_box);
+        button.setText(Game.deviceName + " - " + Game.scoreTable.get(Game.deviceName) + " pts");
+
+        TextView textView = (TextView) findViewById(R.id.textRound);
+        textView.setText("Round "+Game.roundNumber);
+
         TextView questionTextView = (TextView) findViewById(R.id.black_card);
         questionTextView.setText("" + Game.questionID);
 
-        playerNames = new ArrayList<String>();
-        playerNames.add("Player1");
-        playerNames.add("Player2");
-        playerNames.add("Player4");
-        playerNames.add("Player3");
-        playerNames.add("Player5");
-
-        playerPoints = new ArrayList<Integer>();
-        playerPoints.add(3);
-        playerPoints.add(2);
-        playerPoints.add(1);
-        playerPoints.add(0);
-        playerPoints.add(0);
+        playerNames = new ArrayList<String>(Game.scoreTable.keySet());
+        playerPoints = new ArrayList<Integer>(Game.scoreTable.values());
     }
 
     @Override

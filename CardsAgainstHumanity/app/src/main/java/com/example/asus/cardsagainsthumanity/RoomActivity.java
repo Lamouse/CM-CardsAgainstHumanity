@@ -26,6 +26,8 @@ import com.example.asus.cardsagainsthumanity.router.Receiver;
 import com.example.asus.cardsagainsthumanity.router.Sender;
 import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
+import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class RoomActivity extends AppCompatActivity implements ManagerInterface
@@ -173,6 +175,13 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                     Game.roundNumber = 0;
                     String[] questionText = Game.getBlackCardText(questionId);  //[0] has text, [1] has number of answers
                     Game.numAnswers = Integer.parseInt(questionText[1]);
+                    TreeMap<String, Integer> hashResults = new TreeMap<String, Integer>();
+                    for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values()) {
+                        hashResults.put(c.getMac(), 0);
+                    }
+                    Game.scoreTable = Game.sortByValue(hashResults);
+                    Game.deviceName = MeshNetworkManager.getSelf().getMac();
+
                     Intent intent = new Intent(RoomActivity.this, CzarPick.class);
                     // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("Question", Game.questionID);

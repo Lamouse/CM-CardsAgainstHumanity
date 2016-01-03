@@ -40,26 +40,29 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
 
         Receiver.setActivity(this);
 
-        initializeGame(savedInstanceState);
+        // initializeGame(savedInstanceState);
+
+        Log.wtf("GameDevice", Game.deviceName);
+        Log.wtf("GameDevice", ""+Game.scoreTable.containsKey(Game.deviceName));
+        Log.wtf("GameDevice", ""+Game.scoreTable.get(Game.deviceName));
+        Log.wtf("GameDevice", ""+Game.scoreTable);
+
+        Button button = (Button) findViewById(R.id.show_dialog_box);
+        button.setText(Game.deviceName + " - " + Game.scoreTable.get(Game.deviceName) + " pts");
+
+        TextView textView = (TextView) findViewById(R.id.textRound);
+        textView.setText("Round "+Game.roundNumber);
 
         TextView questionTextView = (TextView) findViewById(R.id.black_card);
         String[] blackCardText = Game.getBlackCardText(Game.questionID);
         questionTextView.setText("[" + blackCardText[1] + "] " + blackCardText[0]);
         //questionTextView.setText("[" + Game.numAnswers + "] " + blackCardText[0]); //does not work
 
-        playerNames = new ArrayList<String>();
-        playerNames.add("Player1");
-        playerNames.add("Player2");
-        playerNames.add("Player4");
-        playerNames.add("Player3");
-        playerNames.add("Player5");
-
+        playerNames = new ArrayList<String>(Game.scoreTable.keySet());
         playerPoints = new ArrayList<Integer>();
-        playerPoints.add(3);
-        playerPoints.add(2);
-        playerPoints.add(1);
-        playerPoints.add(0);
-        playerPoints.add(0);
+        for(String tempString : playerNames) {
+            playerPoints.add(Game.scoreTable.get(tempString));
+        }
 
         final ListView listView = (ListView) findViewById(R.id.answerList);
         int[] ids = Game.getWhiteCardId(maxCards);
