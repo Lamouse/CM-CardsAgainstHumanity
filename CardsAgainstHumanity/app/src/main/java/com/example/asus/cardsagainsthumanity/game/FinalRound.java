@@ -46,11 +46,6 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if(!Game.isCzar) {
             fab.setVisibility(View.GONE);
-
-            if(Game.scoreTable.containsKey(winnerMac)){
-                Game.scoreTable.put(winnerMac, Game.scoreTable.get(winnerMac) + 1);
-                Game.scoreTable = Game.sortByValue(Game.scoreTable);
-            }
         }
 
         Button button = (Button) findViewById(R.id.show_dialog_box);
@@ -143,6 +138,6 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
 
     @Override
     public void onBackPressed() {
-        // User used back and nothing happened
+        // User used back but nothing happened
     }
 }

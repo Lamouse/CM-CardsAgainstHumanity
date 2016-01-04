@@ -57,6 +57,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
         setContentView(R.layout.activity_room);
 
         Receiver.setActivity(RoomActivity.this);
+        Game.RoomActivity = this;
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();

@@ -156,6 +156,6 @@ public class PlayerPick extends AppCompatActivity implements ManagerInterface
 
     @Override
     public void onBackPressed() {
-        // User used back and nothing happened
+        // User used back but nothing happened
     }
 }

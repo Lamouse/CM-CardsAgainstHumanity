@@ -17,6 +17,7 @@ import com.example.asus.cardsagainsthumanity.ManagerInterface;
 import com.example.asus.cardsagainsthumanity.R;
 import com.example.asus.cardsagainsthumanity.RoomActivity;
 import com.example.asus.cardsagainsthumanity.config.Configuration;
+import com.example.asus.cardsagainsthumanity.game.utils.Game;
 import com.example.asus.cardsagainsthumanity.router.AllEncompasingP2PClient;
 import com.example.asus.cardsagainsthumanity.router.MeshNetworkManager;
 import com.example.asus.cardsagainsthumanity.router.Receiver;

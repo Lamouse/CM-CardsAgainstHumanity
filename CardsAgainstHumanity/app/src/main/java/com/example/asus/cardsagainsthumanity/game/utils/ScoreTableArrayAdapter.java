@@ -31,7 +31,11 @@ public class ScoreTableArrayAdapter extends ArrayAdapter<String> {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View rowView = inflater.inflate(R.layout.content_score_table, parent, false);
+        View rowView;
+        if(Game.deviceName.equals(names.get(position)))
+            rowView = inflater.inflate(R.layout.content_score_table_self, parent, false);
+        else
+            rowView = inflater.inflate(R.layout.content_score_table, parent, false);
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.contentImage);
         if(position == 0)

@@ -14,6 +14,7 @@ import com.example.asus.cardsagainsthumanity.RoomActivity;
 // import com.example.asus.cardsagainsthumanity.RoomPeersList;
 import com.example.asus.cardsagainsthumanity.config.Configuration;
 import com.example.asus.cardsagainsthumanity.game.CzarPick;
+import com.example.asus.cardsagainsthumanity.game.FinalGame;
 import com.example.asus.cardsagainsthumanity.game.FinalRound;
 import com.example.asus.cardsagainsthumanity.game.PlayerPick;
 import com.example.asus.cardsagainsthumanity.game.PlayerWait;
@@ -204,6 +205,7 @@ public class Receiver implements Runnable {
                         String data = new String(p.getData());
                         String[] separated = data.split(",");
                         if (MeshNetworkManager.getSelf().getMac().equals(separated[0]))  // Check if user was delegated to be CZAR
+                        if (MeshNetworkManager.getSelf().getMac().equals(separated[0]))  // Check if user was delegated to be CZAR
                         {
                             Game.isCzar = true;
 							Game.questionID = Integer.parseInt(separated[1]);
@@ -227,6 +229,7 @@ public class Receiver implements Runnable {
 							}
 							Game.scoreTable = Game.sortByValue(hashResults);
 							Game.deviceName = MeshNetworkManager.getSelf().getMac();
+							Game.isCzar = false;
 
 							Intent intent = new Intent(activity, PlayerPick.class);
 							// intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -271,6 +274,23 @@ public class Receiver implements Runnable {
                     {
                         String data = new String(p.getData());
                         String[] separated = data.split(";");
+
+						if(Game.scoreTable.containsKey(separated[0])){
+							Game.scoreTable.put(separated[0], Game.scoreTable.get(separated[0]) + 1);
+							Game.scoreTable = Game.sortByValue(Game.scoreTable);
+
+							if(Game.scoreTable.get(separated[0]) >= 5) {
+								Intent intent = new Intent(activity, FinalGame.class);
+								intent.putExtra("winnerMac", separated[0]);
+								if(Game.numAnswers==1)
+									intent.putExtra("winnerCardsID", separated[1]);
+								else
+									intent.putExtra("winnerCardsID", separated[1]+","+separated[2]);
+								activity.startActivity(intent);
+								activity.finish();
+								return;
+							}
+						}
 
                         Intent intent = new Intent(activity, FinalRound.class);
                         intent.putExtra("winnerMac", separated[0]);

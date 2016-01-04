@@ -130,6 +130,23 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
                         WifiDirectBroadcastReceiver.MAC));
             }
 
+            if(Game.scoreTable.containsKey(answersMacAddress.get(winnerIndex))){
+                Game.scoreTable.put(answersMacAddress.get(winnerIndex), Game.scoreTable.get(answersMacAddress.get(winnerIndex)) + 1);
+                Game.scoreTable = Game.sortByValue(Game.scoreTable);
+
+                if(Game.scoreTable.get(answersMacAddress.get(winnerIndex)) >= 5) {
+                    Intent intent = new Intent(CzarPick.this, FinalGame.class);
+                    intent.putExtra("winnerMac", answersMacAddress.get(winnerIndex));
+                    if(Game.numAnswers==1)
+                        intent.putExtra("winnerCardsID", answers1.get(winnerIndex));
+                    else
+                        intent.putExtra("winnerCardsID", answers1.get(winnerIndex) + "," + answers2.get(winnerIndex));
+                    startActivity(intent);
+                    finish();
+                    return;
+                }
+            }
+
             Intent intent = new Intent(CzarPick.this, FinalRound.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("winnerMac", answersMacAddress.get(winnerIndex));
@@ -180,6 +197,6 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
 
     @Override
     public void onBackPressed() {
-        // User used back and nothing happened
+        // User used back but nothing happened
     }
 }

@@ -1,9 +1,11 @@
 package com.example.asus.cardsagainsthumanity.game.utils;
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 
 import com.example.asus.cardsagainsthumanity.database.DatabaseHelper;
+import com.example.asus.cardsagainsthumanity.wifi.WifiDirectBroadcastReceiver;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +24,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class Game
 {
+    public static Activity RoomActivity;
     public static String deviceName;
     public static boolean isCzar;
     public static int roundNumber;

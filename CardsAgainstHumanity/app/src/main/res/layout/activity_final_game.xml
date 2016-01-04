@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="fill"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/colorDarkGray"
+    android:weightSum="1.0"
+    android:orientation="vertical">
+
+    <LinearLayout android:layout_width="fill_parent"
+        android:id="@+id/viewA"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:background="@color/colorBlack"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:textColor="@color/colorGreen"
+                android:background="@color/colorNearBlack"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="monospace"
+                android:text="Player2 - 2 pts"
+                android:onClick="openScoreTable"
+                android:id="@+id/show_dialog_box"/>
+
+            <TextView
+                android:id="@+id/textRound"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
+                android:textColor="@color/colorWhite"
+                android:layout_marginLeft="30dp"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="monospace"
+                android:text="Round 5"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.2"
+                android:textColor="@color/colorWhite"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="monospace"
+                android:gravity="right"
+                android:text="Player"
+                android:id="@+id/player_type"/>
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/scrollView"
+            android:layout_marginTop="@dimen/activty_margin"
+            android:layout_marginLeft="@dimen/activty_margin"
+            android:layout_marginRight="@dimen/activty_margin"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:textSize="25sp"
+                android:typeface="monospace"
+                android:id="@+id/black_card"
+                android:text="@string/large_string"/>
+
+        </ScrollView>
+    </LinearLayout>
+
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1.0"
+            android:orientation="vertical"
+            android:background="@color/colorWhite" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.5"
+                    android:text="Winner"
+                    android:textSize="40dp"
+                    android:typeface="monospace"
+                    android:textColor="@color/colorBlue"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="List View Source Code"
+                    android:textSize="20dp"
+                    android:textColor="@color/colorBlack"
+                    android:gravity="center"
+                    android:id="@+id/white1"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Simple List View In Android"
+                    android:textSize="20dp"
+                    android:textColor="@color/colorBlack"
+                    android:gravity="center"
+                    android:id="@+id/white2"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Player 3"
+                    android:textSize="15dp"
+                    android:textColor="@color/colorDarkGray"
+                    android:gravity="center"
+                    android:id="@+id/winner_player"/>
+            </LinearLayout>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:id="@+id/scoreTableList"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:typeface="monospace"
+        android:onClick="goToMainMenu"
+        android:text="Return to the main menu" />
+</LinearLayout>
