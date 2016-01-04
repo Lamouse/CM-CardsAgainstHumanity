@@ -262,7 +262,8 @@ public class Receiver implements Runnable {
                     {
 
                     }
-                    else if (p.getType().equals(Packet.TYPE.WINNER) && (("PlayerWait".equals(((ManagerInterface) activity).getActivityName()))))
+                    else if (p.getType().equals(Packet.TYPE.WINNER) && (("PlayerWait".equals(((ManagerInterface) activity).getActivityName()))
+                    || ("PlayerPick".equals(((ManagerInterface) activity).getActivityName()))))
                     {
                         String data = new String(p.getData());
                         String[] separated = data.split(";");
