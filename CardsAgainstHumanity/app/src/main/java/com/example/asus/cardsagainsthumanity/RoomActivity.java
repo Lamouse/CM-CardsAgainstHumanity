@@ -106,6 +106,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
             connect(config);
         }
 
+        Game.roundNumber = 1;
         Game.responsesID = new ConcurrentLinkedQueue<>();
     }
 
@@ -172,7 +173,6 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                                 WifiDirectBroadcastReceiver.MAC));
                     }
                     Game.questionID = questionId;
-                    Game.roundNumber = 0;
                     String[] questionText = Game.getBlackCardText(questionId);  //[0] has text, [1] has number of answers
                     Game.numAnswers = Integer.parseInt(questionText[1]);
                     TreeMap<String, Integer> hashResults = new TreeMap<String, Integer>();

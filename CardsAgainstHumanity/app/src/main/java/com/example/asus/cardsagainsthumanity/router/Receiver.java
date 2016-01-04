@@ -207,7 +207,6 @@ public class Receiver implements Runnable {
                         {
                             Game.isCzar = true;
 							Game.questionID = Integer.parseInt(separated[1]);
-							Game.roundNumber = 0; //FIXME
 							String[] questionText = Game.getBlackCardText(Integer.parseInt(separated[1]));  //[0] has text, [1] has number of answers
 							Game.numAnswers = Integer.parseInt(questionText[1]);
 
@@ -222,7 +221,6 @@ public class Receiver implements Runnable {
                         {
                             Game.isCzar = false;
 							Game.questionID = Integer.parseInt(separated[1]);
-							Game.roundNumber = 0; //FIXME
 							TreeMap<String, Integer> hashResults = new TreeMap<String, Integer>();
 							for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values()) {
 								hashResults.put(c.getMac(), 0);
@@ -276,9 +274,12 @@ public class Receiver implements Runnable {
 
                         Intent intent = new Intent(activity, FinalRound.class);
                         intent.putExtra("winnerMac", separated[0]);
-                        intent.putExtra("winnerCardsID", separated[1]);
-                        activity.startActivity(intent);
-                        //FIXME: É preciso dara finish()???????
+						if(separated.length == 2)
+                        	intent.putExtra("winnerCardsID", separated[1]);
+						else
+							intent.putExtra("winnerCardsID", separated[1]+","+separated[2]);
+						activity.startActivity(intent);
+						activity.finish();
                     }
 				}
                 else

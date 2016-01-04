@@ -1,6 +1,7 @@
 package com.example.asus.cardsagainsthumanity.game;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -42,6 +43,16 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
         String winnerMac = intent.getStringExtra("winnerMac");
         String[] separated = winnerCardsID.split(",");
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if(!Game.isCzar) {
+            fab.setVisibility(View.GONE);
+
+            if(Game.scoreTable.containsKey(winnerMac)){
+                Game.scoreTable.put(winnerMac, Game.scoreTable.get(winnerMac) + 1);
+                Game.scoreTable = Game.sortByValue(Game.scoreTable);
+            }
+        }
+
         Button button = (Button) findViewById(R.id.show_dialog_box);
         button.setText(Game.deviceName + " - " + Game.scoreTable.get(Game.deviceName) + " pts");
 
@@ -72,6 +83,8 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
             a2.setVisibility(View.GONE);
         }
         winner.setText(winnerMac);
+
+        Game.roundNumber += 1;
     }
 
     public void goToNextRound(View view)
@@ -105,7 +118,7 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
                         WifiDirectBroadcastReceiver.MAC));
             }
             Game.questionID = questionId;
-            Game.roundNumber += 1;
+            Game.isCzar = false;
             String[] questionText = Game.getBlackCardText(questionId);  //[0] has text, [1] has number of answers
             Game.numAnswers = Integer.parseInt(questionText[1]);
 

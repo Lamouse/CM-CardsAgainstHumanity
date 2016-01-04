@@ -32,6 +32,7 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
     private ArrayList<String> answers1;
     private ArrayList<String> answers2;
     private ArrayList<String> answersMacAddress;
+    private ViewAnswerArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,6 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
 
         answers1 = new ArrayList<>();
         answers2 = new ArrayList<>();
-
         answersMacAddress = new ArrayList<>();
         updateList();
     }
@@ -109,28 +109,37 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
 
     public void vote(View view)
     {
-        int winnerIndex = 0; // FIXME: Get from list view
-        String winnerAnswer = answersMacAddress.get(winnerIndex);
-        winnerAnswer += ";";
-        winnerAnswer += answers1.get(winnerIndex);
-
-        for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
-        {
-            if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()))
-            {
-                continue;
+        int winnerIndex = adapter.getClickedItem(); // FIXME: Get from list view
+        if(winnerIndex != -1) {
+            String winnerAnswer = answersMacAddress.get(winnerIndex);
+            winnerAnswer += ";";
+            winnerAnswer += answers1.get(winnerIndex);
+            if(Game.numAnswers > 1) {
+                winnerAnswer += ";";
+                winnerAnswer += answers2.get(winnerIndex);
             }
-            Log.wtf("SENDING WHITE CARD TO: ", " " + c.getMac());
-            Sender.queuePacket(new Packet(Packet.TYPE.WINNER, winnerAnswer.getBytes(), c.getMac(),
-                    WifiDirectBroadcastReceiver.MAC));
-        }
 
-        Intent intent = new Intent(CzarPick.this, FinalRound.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("winnerMac", answersMacAddress.get(winnerIndex));
-        intent.putExtra("winnerCardsID", answers1.get(winnerIndex));
-        startActivity(intent);
-        finish();
+            for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values())
+            {
+                if (c.getMac().equals(MeshNetworkManager.getSelf().getMac()))
+                {
+                    continue;
+                }
+                Log.wtf("SENDING WHITE CARD TO: ", " " + c.getMac());
+                Sender.queuePacket(new Packet(Packet.TYPE.WINNER, winnerAnswer.getBytes(), c.getMac(),
+                        WifiDirectBroadcastReceiver.MAC));
+            }
+
+            Intent intent = new Intent(CzarPick.this, FinalRound.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("winnerMac", answersMacAddress.get(winnerIndex));
+            if(Game.numAnswers==1)
+                intent.putExtra("winnerCardsID", answers1.get(winnerIndex));
+            else
+                intent.putExtra("winnerCardsID", answers1.get(winnerIndex) + "," + answers2.get(winnerIndex));
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override
@@ -149,7 +158,7 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
         else
             answersArray2 = null;
 
-        final ViewAnswerArrayAdapter adapter = new ViewAnswerArrayAdapter(this, answersArray1, answersArray2);
+        adapter = new ViewAnswerArrayAdapter(this, answersArray1, answersArray2);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -157,14 +166,14 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                adapter.itemClicked(position);
+            adapter.itemClicked(position);
 
-                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-                if(adapter.getClickedItem() != -1) {
-                    fab.setClickable(true);
-                } else {
-                    fab.setClickable(false);
-                }
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            if(adapter.getClickedItem() == -1) {
+                fab.setClickable(false);
+            } else {
+                fab.setClickable(true);
+            }
             }
         });
     }
