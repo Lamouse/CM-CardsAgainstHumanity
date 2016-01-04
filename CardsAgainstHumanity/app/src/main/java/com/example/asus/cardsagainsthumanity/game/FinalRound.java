@@ -40,7 +40,9 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
         textView.setText("Round "+Game.roundNumber);
 
         TextView questionTextView = (TextView) findViewById(R.id.black_card);
-        questionTextView.setText("" + Game.questionID);
+        String[] blackCardText = Game.getBlackCardText(Game.questionID);
+        questionTextView.setText("[" + blackCardText[1] + "] " + blackCardText[0]);
+        Game.numAnswers = Integer.parseInt(blackCardText[1]);
 
         playerNames = new ArrayList<String>(Game.scoreTable.keySet());
         playerPoints = new ArrayList<Integer>(Game.scoreTable.values());
@@ -49,10 +51,12 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
         TextView a2 = (TextView)findViewById(R.id.white2);
         TextView winner = (TextView) findViewById(R.id.winner_player);
 
-        a1.setText(separated[0]); //FIXME: Ir à BD
+        String whiteCardText = Game.getWhiteCardText(Integer.parseInt(separated[0]));
+        a1.setText("[1] " + whiteCardText); //FIXME: Ir à BD
         if (separated.length == 2)
         {
-            a2.setText(separated[1]); //FIXME: Ir à BD
+            String whiteCard2Text = Game.getWhiteCardText(Integer.parseInt(separated[1]));
+            a2.setText("[2] " + whiteCard2Text); //FIXME: Ir à BD
         }
         else
         {
