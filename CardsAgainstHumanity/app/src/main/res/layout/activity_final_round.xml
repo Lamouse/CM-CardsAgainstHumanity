@@ -60,7 +60,8 @@
                     android:textStyle="bold"
                     android:typeface="monospace"
                     android:gravity="right"
-                    android:text="Player"/>
+                    android:text="Player"
+                    android:id="@+id/player_type"/>
 
             </LinearLayout>
 
@@ -138,6 +139,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:clickable="true"
+        android:onClick="goToNextRound"
         app:backgroundTint="@color/colorDarkGray"
         android:src="@drawable/check"
         app:layout_anchor="@id/viewA"

@@ -170,7 +170,7 @@ public class RoomActivity extends AppCompatActivity implements ManagerInterface
                             continue;
                         Sender.queuePacket(new Packet(Packet.TYPE.CZAR, czarMessage.getBytes(), c.getMac(),
                                 WifiDirectBroadcastReceiver.MAC));
-                    };
+                    }
                     Game.questionID = questionId;
                     Game.roundNumber = 0;
                     String[] questionText = Game.getBlackCardText(questionId);  //[0] has text, [1] has number of answers

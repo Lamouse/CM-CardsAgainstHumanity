@@ -203,16 +203,26 @@ public class Receiver implements Runnable {
                     {
                         String data = new String(p.getData());
                         String[] separated = data.split(",");
-                        if (MeshNetworkManager.getSelf().getMac().equals(data))  // Check if user was delegated to be CZAR
+                        if (MeshNetworkManager.getSelf().getMac().equals(separated[0]))  // Check if user was delegated to be CZAR
                         {
                             Game.isCzar = true;
-                            // FIXME: Implement
+							Game.questionID = Integer.parseInt(separated[1]);
+							Game.roundNumber = 0; //FIXME
+							String[] questionText = Game.getBlackCardText(Integer.parseInt(separated[1]));  //[0] has text, [1] has number of answers
+							Game.numAnswers = Integer.parseInt(questionText[1]);
+
+							Intent intent = new Intent(activity, CzarPick.class);
+							intent.putExtra("Question", Game.questionID);
+							intent.putExtra("RoundNumber", Game.roundNumber);
+							intent.putExtra("isCzar", Game.isCzar);
+							intent.putExtra("numAnswers", Game.numAnswers);
+							activity.startActivity(intent);
                         }
                         else
                         {
                             Game.isCzar = false;
 							Game.questionID = Integer.parseInt(separated[1]);
-							Game.roundNumber = 0;
+							Game.roundNumber = 0; //FIXME
 							TreeMap<String, Integer> hashResults = new TreeMap<String, Integer>();
 							for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values()) {
 								hashResults.put(c.getMac(), 0);
@@ -258,10 +268,6 @@ public class Receiver implements Runnable {
 							Game.responsesID.add(arrayList);
 						}
 					}
-                    else if (p.getType().equals(Packet.TYPE.FINISH))
-                    {
-
-                    }
                     else if (p.getType().equals(Packet.TYPE.WINNER) && (("PlayerWait".equals(((ManagerInterface) activity).getActivityName()))
                     || ("PlayerPick".equals(((ManagerInterface) activity).getActivityName()))))
                     {
