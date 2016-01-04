@@ -58,6 +58,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String cardType = (String) card.get("cardType");
                 String text = (String) card.get("text");
                 int numAnswers = (int)(long)  card.get("numAnswers");
+                if(numAnswers>2){
+                    continue;
+                }
                 String expansion = (String) card.get("expansion");
 
                 cv.clear();
