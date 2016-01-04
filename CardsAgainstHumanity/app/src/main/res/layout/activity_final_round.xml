@@ -108,7 +108,8 @@
                 android:text="List View Source Code"
                 android:textSize="20dp"
                 android:textColor="@color/colorBlack"
-                android:gravity="center" />
+                android:gravity="center"
+                android:id="@+id/white1"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -116,7 +117,8 @@
                 android:text="Simple List View In Android"
                 android:textSize="20dp"
                 android:textColor="@color/colorBlack"
-                android:gravity="center" />
+                android:gravity="center"
+                android:id="@+id/white2"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -124,7 +126,8 @@
                 android:text="Player 3"
                 android:textSize="15dp"
                 android:textColor="@color/colorDarkGray"
-                android:gravity="center" />
+                android:gravity="center"
+                android:id="@+id/winner_player"/>
         </LinearLayout>
 
     </LinearLayout>
