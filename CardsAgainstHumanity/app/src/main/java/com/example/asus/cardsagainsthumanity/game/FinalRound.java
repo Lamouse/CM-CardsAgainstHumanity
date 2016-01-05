@@ -112,6 +112,7 @@ public class FinalRound extends AppCompatActivity implements ManagerInterface
                 Sender.queuePacket(new Packet(Packet.TYPE.CZAR, czarMessage.getBytes(), c.getMac(),
                         WifiDirectBroadcastReceiver.MAC));
             }
+
             Game.questionID = questionId;
             Game.isCzar = false;
             String[] questionText = Game.getBlackCardText(questionId);  //[0] has text, [1] has number of answers

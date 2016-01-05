@@ -224,11 +224,14 @@ public class Receiver implements Runnable {
                         {
                             Game.isCzar = false;
 							Game.questionID = Integer.parseInt(separated[1]);
-							TreeMap<String, Integer> hashResults = new TreeMap<String, Integer>();
-							for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values()) {
-								hashResults.put(c.getMac(), 0);
+							if("RoomActivity".equals(((ManagerInterface) activity).getActivityName()))
+							{
+								TreeMap<String, Integer> hashResults = new TreeMap<String, Integer>();
+								for (AllEncompasingP2PClient c : MeshNetworkManager.routingTable.values()) {
+									hashResults.put(c.getMac(), 0);
+								}
+								Game.scoreTable = Game.sortByValue(hashResults);
 							}
-							Game.scoreTable = Game.sortByValue(hashResults);
 							Game.deviceName = MeshNetworkManager.getSelf().getMac();
 							Game.isCzar = false;
 
@@ -242,7 +245,7 @@ public class Receiver implements Runnable {
 								activity.finish();
                         }
                     }
-                    else if (p.getType().equals(Packet.TYPE.WHITECARD)) {
+					else if (p.getType().equals(Packet.TYPE.WHITECARD)) {
 						final String data = new String(p.getData());
 						final String senderMacAddress = p.getSenderMac();
 						Log.wtf("White Card Received: ", " " + data);

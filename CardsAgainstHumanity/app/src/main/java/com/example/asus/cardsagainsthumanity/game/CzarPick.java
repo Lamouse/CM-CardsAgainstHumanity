@@ -148,7 +148,6 @@ public class CzarPick extends AppCompatActivity implements ManagerInterface
             }
 
             Intent intent = new Intent(CzarPick.this, FinalRound.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("winnerMac", answersMacAddress.get(winnerIndex));
             if(Game.numAnswers==1)
                 intent.putExtra("winnerCardsID", answers1.get(winnerIndex));
