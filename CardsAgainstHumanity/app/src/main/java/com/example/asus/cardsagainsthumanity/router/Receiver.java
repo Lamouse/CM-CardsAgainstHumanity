@@ -205,7 +205,6 @@ public class Receiver implements Runnable {
                         String data = new String(p.getData());
                         String[] separated = data.split(",");
                         if (MeshNetworkManager.getSelf().getMac().equals(separated[0]))  // Check if user was delegated to be CZAR
-                        if (MeshNetworkManager.getSelf().getMac().equals(separated[0]))  // Check if user was delegated to be CZAR
                         {
                             Game.isCzar = true;
 							Game.questionID = Integer.parseInt(separated[1]);
