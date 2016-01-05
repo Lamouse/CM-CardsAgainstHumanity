@@ -75,6 +75,11 @@ public class FinalGame extends AppCompatActivity implements ManagerInterface {
         return "FinalGame";
     }
 
+    public void openScoreTable(View view) {
+        ScoreTable scoreTable = ScoreTable.newInstance(playerNames, playerPoints);
+        scoreTable.show(getFragmentManager(), "ScoreTableFragment");
+    }
+
     public void goToMainMenu(View view) {
         Game.RoomActivity.finish();
         Game.RoomActivity = null;

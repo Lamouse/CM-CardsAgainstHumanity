@@ -217,6 +217,8 @@ public class Receiver implements Runnable {
 							intent.putExtra("isCzar", Game.isCzar);
 							intent.putExtra("numAnswers", Game.numAnswers);
 							activity.startActivity(intent);
+							if ("FinalRound".equals(((ManagerInterface) activity).getActivityName()))
+								activity.finish();
                         }
                         else
                         {
@@ -236,7 +238,8 @@ public class Receiver implements Runnable {
 							intent.putExtra("RoundNumber", Game.roundNumber);
 							intent.putExtra("isCzar", Game.isCzar);
 							activity.startActivity(intent);
-							// activity.finish();
+							if ("FinalRound".equals(((ManagerInterface) activity).getActivityName()))
+								activity.finish();
                         }
                     }
                     else if (p.getType().equals(Packet.TYPE.WHITECARD)) {
